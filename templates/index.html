@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" type="text/css" href="https://www.ebi.ac.uk/pdbe/pdb-component-library/css/pdbe-molstar-1.1.0.css">
-    <script type="text/javascript" src="https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-plugin-1.1.0.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.2.0/build/pdbe-molstar-light.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.2.0/build/pdbe-molstar-plugin.js"></script>
 
     <style>
         body {
@@ -126,11 +126,70 @@
                     url: "/static/pdb/{{ pdb_file }}",
                     format: "pdb"
                 },
+                alphafoldView: true,
                 bgColor: { r: 255, g: 255, b: 255 },
-                hideControls: true
+                hideControls: true,
+                hideCanvasControls: [
+                'selection',
+                'animation',
+                'controlToggle',
+                'controlInfo',
+                'trajectory'
+                ]
             };
+
             var viewerContainer = document.getElementById("myViewer");
             viewerInstance.render(viewerContainer, options);
+
+            function change_frame(idx) {
+                const hierarchy = viewerInstance.plugin.managers.structure.hierarchy.current;
+                if (!hierarchy || !hierarchy.models || hierarchy.models.length === 0) {
+                console.warn("No structure models available.");
+                return;
+                }
+                // Get the model reference from the first model.
+                let model = hierarchy.models[0].cell.transform.ref;
+                
+                // Check for trajectory frames using the model index definition.
+                const maxFrames = hierarchy.models[0].cell.params.definition.modelIndex.converted.max;
+                if (maxFrames <= 1) {
+                console.info("Only one frame available (max: " + maxFrames + "). Frame change is not applicable.");
+                return;
+                }
+                
+                let update = viewerInstance.state.build();
+                update.to(model).update({ modelIndex: idx });
+                update.commit();
+            }
+
+            viewerInstance.events.loadComplete.subscribe(() => {
+                console.log("Plugin managers:", viewerInstance.plugin.managers);
+                const hierarchy = viewerInstance.plugin.managers.structure.hierarchy.current;
+                if (!hierarchy || !hierarchy.models || hierarchy.models.length === 0) {
+                console.warn("No structure models available on load.");
+                return;
+                }
+                
+                // Get the max value from the model index.
+                const maxFrames = hierarchy.models[0].cell.params.definition.modelIndex.converted.max;
+                console.info("Model max frames:", maxFrames);
+                if (maxFrames <= 1) {
+                console.info("Only one frame available (max: " + maxFrames + "). Frame updating skipped.");
+                return;
+                }
+                
+                let totalFrames = maxFrames;
+                let currentFrame = 0;
+                const frameInterval = setInterval(() => {
+                if (currentFrame >= totalFrames) {
+                    clearInterval(frameInterval);
+                    console.info("Reached max frames. Stopping frame update.");
+                    return;
+                }
+                change_frame(currentFrame);
+                currentFrame++;
+                }, 10); // Update frames every 1s
+            });
         </script>
     </main>
 </body>
