@@ -12,7 +12,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         nav ul {
@@ -45,6 +46,30 @@
             border: 1px solid #ccc;
             position: relative;
         }
+
+        #sequence-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-family: monospace;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        #sequence-panel span {
+            display: inline-block;
+            text-align: center;
+            margin: 2px;
+            padding: 2px;
+            border: 1px solid transparent;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        #sequence-panel span:hover {
+            background-color: #eee;
+        }
+
 
         form {
             background-color: #f9f9f9;
@@ -100,16 +125,19 @@
         <p>Preencha os campos abaixo para simular uma mutação em uma estrutura proteica. A visualização mudará de acordo com a estabilidade definida em uma lookup table.</p>
 
         <form method="POST">
-            <label for="original">Resíduo original (ex: A):</label>
-            <input type="text" name="original" id="original" required maxlength="1">
-
-            <label for="position">Posição (ex: 123):</label>
-            <input type="number" name="position" id="position" required>
-
-            <label for="mutant">Novo resíduo (ex: V):</label>
-            <input type="text" name="mutant" id="mutant" required maxlength="1">
-
-            <button type="submit">Simular Mutação</button>
+            <label>Selecione a posição para mutação (será mutado para Alanina):</label>
+            <div id="sequence-panel">
+              {% for residue in sequence %}
+                <span 
+                  data-pos="{{ loop.index }}"> 
+                  {{ residue }}<br>
+                  <small>{{ loop.index }}</small>
+                </span>
+              {% endfor %}
+            </div>
+            <!-- Hidden input to store the selected position -->
+            <input type="hidden" name="position" id="position" required>
+            <button type="submit" id="startMutation" disabled>Simular Mutação</button>
         </form>
 
         {% if mutation_result %}
@@ -189,6 +217,25 @@
                 change_frame(currentFrame);
                 currentFrame++;
                 }, 10); // Update frames every 1s
+            });
+
+            // Handle click events on the sequence panel
+              // Add click listeners to each residue span.
+            document.querySelectorAll('#sequence-panel span').forEach(function(span) {
+                span.addEventListener('click', function() {
+                // Remove previous highlights.
+                document.querySelectorAll('#sequence-panel span').forEach(function(s) {
+                    s.style.backgroundColor = '';
+                    s.style.borderColor = 'transparent';
+                });
+                // Highlight the selected residue.
+                this.style.backgroundColor = '#FFD700';
+                this.style.borderColor = '#DAA520';
+                // Update the hidden "position" input with the selected position.
+                document.getElementById('position').value = this.getAttribute('data-pos');
+                // Enable the submit button.
+                document.getElementById('startMutation').disabled = false;
+                });
             });
         </script>
     </main>
