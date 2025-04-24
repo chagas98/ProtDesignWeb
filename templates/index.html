@@ -221,20 +221,37 @@
 
             // Handle click events on the sequence panel
               // Add click listeners to each residue span.
-            document.querySelectorAll('#sequence-panel span').forEach(function(span) {
+              document.querySelectorAll('#sequence-panel span').forEach(function(span) {
                 span.addEventListener('click', function() {
-                // Remove previous highlights.
-                document.querySelectorAll('#sequence-panel span').forEach(function(s) {
-                    s.style.backgroundColor = '';
-                    s.style.borderColor = 'transparent';
-                });
-                // Highlight the selected residue.
-                this.style.backgroundColor = '#FFD700';
-                this.style.borderColor = '#DAA520';
-                // Update the hidden "position" input with the selected position.
-                document.getElementById('position').value = this.getAttribute('data-pos');
-                // Enable the submit button.
-                document.getElementById('startMutation').disabled = false;
+                    // Remove previous highlights.
+                    document.querySelectorAll('#sequence-panel span').forEach(function(s) {
+                        s.style.backgroundColor = '';
+                        s.style.borderColor = 'transparent';
+                    });
+                    // Highlight the selected residue.
+                    this.style.backgroundColor = '#FFD700';
+                    this.style.borderColor = '#DAA520';
+                    // Update the hidden "position" input with the selected position.
+                    var pos = this.getAttribute('data-pos');
+                    document.getElementById('position').value = pos;
+                    // Focus the viewer on the selected residue (assuming chain A)
+                    viewerInstance.visual.focus([{
+                        struct_asym_id: 'A',
+                        start_residue_number: parseInt(pos),
+                        end_residue_number: parseInt(pos)
+                    }]);
+                    viewerInstance.visual.focus([{
+                        struct_asym_id: 'A',
+                        start_residue_number: parseInt(pos),
+                        end_residue_number: parseInt(pos)
+                    }]);
+                    viewerInstance.visual.highlight([{
+                        struct_asym_id: 'A',
+                        start_residue_number: parseInt(pos),
+                        end_residue_number: parseInt(pos)
+                    }]);
+                    // Enable the submit button.
+                    document.getElementById('startMutation').disabled = false;
                 });
             });
         </script>
