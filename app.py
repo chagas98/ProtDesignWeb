@@ -31,6 +31,11 @@ def index():
     sequence = get_sequence_from_pdb(TOPOL_FILE)
     if request.method == "POST":
         position = request.form["position"]
+        reset = request.form["reset"]
+
+        print(reset)
+        if reset == 1:
+            return render_template("index.html", pdb_file=TOPOL_FILE, mutation_result=None, sequence=sequence)
 
         key = f"{position}"  # Ex: A123V
         stability = stability_data.get(key)
@@ -42,9 +47,9 @@ def index():
             else:
                 pdb_file = UNSTABLE_FILE
                 mutation_result = f"A mutação {key} é considerada **INSTÁVEL** (ΔΔG={stability})"
-        else:
+        elif key == "reset":
             pdb_file = TOPOL_FILE
-            mutation_result = f"Mutação {key} não encontrada. Exibindo estrutura original."
+            mutation_result = f"Reset. Estrutura original."
 
         return render_template("index.html", pdb_file=pdb_file, mutation_result=mutation_result, sequence=sequence)
 
