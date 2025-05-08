@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Design de Proteínas - Processando Mutação</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <style>
+        /* Modal Popup for "Mutando a proteína..." */
+        .mutation-process-modal {
+            display: flex; /* Show by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .mutation-process-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .mutation-process-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .mutation-process-content p {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="mutation-process-modal">
+            <div class="mutation-process-content">
+                <h2>Mutando a proteína...</h2>
+                <p>{{ mutation_result }}</p>
+                <div id="progress-bar" style="width: 100%; height: 30px; background-color: #ccc;">
+                    <div id="progress" style="height: 100%; width: {{ bar_value * 100 }}%; background-color: #4CAF50;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Mol* setup to load the PDB file (Trajectory)
+        var viewerInstance = new PDBeMolstarPlugin();
+        var options = {
+            customData: {
+                url: "/static/pdb/{{ pdb_file }}",  // Use the stable or unstable file
+                format: "pdb"
+            },
+            alphafoldView: true,
+            trajectory: true,  // Enable trajectory rendering
+            bgColor: { r: 255, g: 255, b: 255 },
+            hideControls: false,
+            hideCanvasControls: [
+                'selection',
+                'animation',
+                'controlToggle',
+                'controlInfo',
+                'trajectory'
+            ]
+        };
+
+        var viewerContainer = document.getElementById("myViewer");
+        viewerInstance.render(viewerContainer, options);
+
+        // Detect when the trajectory has been fully loaded
+        viewerInstance.events.loadComplete.subscribe(() => {
+            console.log("Trajectory loaded successfully.");
+            // Redirect after loading
+            setTimeout(function() {
+                var mutationStatus = "{{ mutation_result }}".includes("ESTABILIZANTE") ? "stable" : "unstable";
+                window.location.href = "/" + mutationStatus;  // Redirect to appropriate page
+            }, 2000); // Delay for 2 seconds to ensure the user sees the loading pop-up
+        });
+    </script>
+
+</body>
+</html>

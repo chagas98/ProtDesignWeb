@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Design de Proteínas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.2.0/build/pdbe-molstar-light.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.2.0/build/pdbe-molstar-plugin.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin-left: auto;
+            margin-right: auto;
+            height: 100vh;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 1px;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        nav ul li {
+            display: inline-block;
+            padding: 14px 16px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        nav ul li strong {
+            color: #000; /* Set the text color to black or any desired color */
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        #myViewer {
+            width: 100%;
+            height: 500px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        #sequence-panel {
+            display: flex;
+            flex-wrap: wrap;
+            font-family: monospace;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        #sequence-panel span {
+            display: inline-block;
+            text-align: center;
+            margin: 2px;
+            padding: 2px;
+            border: 1px solid transparent;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        #sequence-panel span:hover {
+            background-color: #eee;
+        }
+
+
+        form {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        form label {
+            display: block;
+            margin-top: 2px;
+        }
+
+        form input {
+            width: 80%;
+            padding: 6px;
+            margin-top: 5px;
+        }
+
+        form button {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        .result-message {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background-color: #f0f0f0;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #ccc;
+            margin-top: 2px;
+        }
+
+        .footer-images img {
+            max-width: 700px;
+            margin: 0 10px;
+            vertical-align: middle;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .footer-images img:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><strong>Protein Mutator</strong></li>
+            <li><a href="https://lnbio.cnpem.br/" target="_blank">Site LNBio</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1> Protein Mutator: Aumente a estabilidade da sua proteína</h1>
+
+        <form method="POST">
+            <label>Selecione a posição para mutação (será mutado para Alanina):</label>
+            <div class="container">
+        <!-- Sequence panel on the left -->
+        <div id="sequence-panel" class="sequence-panel">
+            {% for residue in sequence %}
+                <span data-pos="{{ loop.index }}">
+                    {{ residue }}<br>
+                    <small>{{ loop.index }}</small>
+                </span>
+            {% endfor %}
+        </div>
+
+        <!-- Mutation buttons panel on the right -->
+        <div id="mutation-buttons" class="mutation-buttons">
+            <label>Escolha o aminoácido para a mutação:</label><br>
+            <!-- Amino Acid Buttons -->
+            <button type="button" class="mutation-btn" data-aa="A">A</button>
+            <button type="button" class="mutation-btn" data-aa="C">C</button>
+            <button type="button" class="mutation-btn" data-aa="D">D</button>
+            <button type="button" class="mutation-btn" data-aa="E">E</button>
+            <button type="button" class="mutation-btn" data-aa="F">F</button>
+            <button type="button" class="mutation-btn" data-aa="G">G</button>
+            <button type="button" class="mutation-btn" data-aa="H">H</button>
+            <button type="button" class="mutation-btn" data-aa="I">I</button>
+            <button type="button" class="mutation-btn" data-aa="K">K</button>
+            <button type="button" class="mutation-btn" data-aa="L">L</button>
+            <button type="button" class="mutation-btn" data-aa="M">M</button>
+            <button type="button" class="mutation-btn" data-aa="N">N</button>
+            <button type="button" class="mutation-btn" data-aa="P">P</button>
+            <button type="button" class="mutation-btn" data-aa="Q">Q</button>
+            <button type="button" class="mutation-btn" data-aa="R">R</button>
+            <button type="button" class="mutation-btn" data-aa="S">S</button>
+            <button type="button" class="mutation-btn" data-aa="T">T</button>
+            <button type="button" class="mutation-btn" data-aa="V">V</button>
+            <button type="button" class="mutation-btn" data-aa="W">W</button>
+            <button type="button" class="mutation-btn" data-aa="Y">Y</button>
+        </div>
+    </div>
+
+    <input type="hidden" name="position" id="position" required>
+    <input type="hidden" name="mutation_aa" id="mutation_aa" required>  <!-- Hidden field for selected mutation amino acid -->
+    <input type="hidden" name="reset" id="reset" required>
+    <button type="submit" id="startMutation" disabled>Simular Mutação</button>
+    <button type="button" id="resetViewer">Resetar Estrutura</button>
+</form>
+         {% if mutation_result %}
+               <div class="result-message">{{ mutation_result | safe }}</div>
+    
+               <!-- Stability bar (below mutation result) -->
+               <div class="stability-bar">
+                   <div class="bar" style="width: {{ bar_value * 100 }}%;"></div>
+               </div>
+         {% endif %}
+
+        <h2>Visualização Molecular</h2>
+        <div id="myViewer"></div>
+
+        <script>
+            var viewerInstance = new PDBeMolstarPlugin();
+            var options = {
+                customData: {
+                    url: "/static/pdb/{{ pdb_file }}",
+                    format: "pdb"
+                },
+                alphafoldView: true,
+                bgColor: { r: 255, g: 255, b: 255 },
+                hideControls: true,
+                hideCanvasControls: [
+                'selection',
+                'animation',
+                'controlToggle',
+                'controlInfo',
+                'trajectory'
+                ]
+            };
+
+            var viewerContainer = document.getElementById("myViewer");
+            viewerInstance.render(viewerContainer, options);
+
+            function change_frame(idx) {
+                const hierarchy = viewerInstance.plugin.managers.structure.hierarchy.current;
+                if (!hierarchy || !hierarchy.models || hierarchy.models.length === 0) {
+                console.warn("No structure models available.");
+                return;
+                }
+                // Get the model reference from the first model.
+                let model = hierarchy.models[0].cell.transform.ref;
+                
+                // Check for trajectory frames using the model index definition.
+                const maxFrames = hierarchy.models[0].cell.params.definition.modelIndex.converted.max;
+                if (maxFrames <= 1) {
+                console.info("Only one frame available (max: " + maxFrames + "). Frame change is not applicable.");
+                return;
+                }
+                
+                let update = viewerInstance.state.build();
+                update.to(model).update({ modelIndex: idx });
+                update.commit();
+            }
+
+            viewerInstance.events.loadComplete.subscribe(() => {
+                console.log("Plugin managers:", viewerInstance.plugin.managers);
+                const hierarchy = viewerInstance.plugin.managers.structure.hierarchy.current;
+                if (!hierarchy || !hierarchy.models || hierarchy.models.length === 0) {
+                console.warn("No structure models available on load.");
+                return;
+                }
+                
+                // Get the max value from the model index.
+                const maxFrames = hierarchy.models[0].cell.params.definition.modelIndex.converted.max;
+                console.info("Model max frames:", maxFrames);
+                if (maxFrames <= 1) {
+                console.info("Only one frame available (max: " + maxFrames + "). Frame updating skipped.");
+                return;
+                }
+                
+                let totalFrames = maxFrames;
+                let currentFrame = 0;
+                const frameInterval = setInterval(() => {
+                if (currentFrame >= totalFrames) {
+                    clearInterval(frameInterval);
+                    console.info("Reached max frames. Stopping frame update.");
+                    return;
+                }
+                change_frame(currentFrame);
+                currentFrame++;
+                }, 10); // Update frames every 1s
+            });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // Handle click events on the sequence panel
+                document.querySelectorAll('#sequence-panel span').forEach(function(span) {
+                    span.addEventListener('click', function() {
+                        // Remove previous highlights
+                        document.querySelectorAll('#sequence-panel span').forEach(function(s) {
+                            s.style.backgroundColor = '';
+                            s.style.borderColor = 'transparent';
+                        });
+                        // Highlight the selected residue
+                        this.style.backgroundColor = '#FFD700';
+                        this.style.borderColor = '#DAA520';
+                        // Update the hidden "position" input with the selected position
+                        var pos = this.getAttribute('data-pos');
+                        document.getElementById('position').value = pos;
+                        console.log("Selected position:", pos);
+                        // Focus the viewer on the selected residue (assuming chain A)
+                        viewerInstance.visual.focus([{
+                            struct_asym_id: 'A',
+                            start_residue_number: parseInt(pos),
+                            end_residue_number: parseInt(pos)
+                        }]);
+                        console.log("Focus:", pos);
+                        // Enable the submit button
+                        console.log("Enabling the submit button");
+                        document.getElementById('startMutation').disabled = false;
+                    });
+                });
+            
+            // Handle click events for mutation amino acid buttons
+    document.querySelectorAll('.mutation-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Highlight selected mutation button
+            document.querySelectorAll('.mutation-btn').forEach(function(b) {
+                b.style.backgroundColor = '';  // Reset all buttons
+            });
+            this.style.backgroundColor = '#FFD700';  // Highlight selected button
+
+            // Update the hidden "mutation_aa" input with the selected amino acid
+            var aa = this.getAttribute('data-aa');
+            document.getElementById('mutation_aa').value = aa;  // Ensure this input is updated correctly
+            console.log("Selected amino acid:", aa);
+
+            // Enable the submit button if both position and amino acid are selected
+            if (document.getElementById('position').value && aa) {
+                document.getElementById('startMutation').disabled = false;
+            }
+        });
+    });
+
+
+            // Bind to the PDB.molstar.click event
+            document.addEventListener('PDB.molstar.click', function(e) {
+                    var eventData = e.eventData; // Contains information about the clicked residue
+                    console.log("Clicked residue data:", eventData);
+                    if (eventData && eventData.residueNumber) {
+                        var residueNumber = eventData.residueNumber;
+                        console.log("Clicked residue number:", residueNumber);
+
+                        // Find the corresponding span in the sequence panel
+                        var span = document.querySelector(`#sequence-panel span[data-pos="${residueNumber}"]`);
+                        console.log("Found span:", span);
+                        if (span) {
+                            // Trigger a click event on the span to highlight it and update the input
+                            span.click();
+                        }
+                    }
+                });
+            
+            // Reset viewer button
+            document.getElementById('resetViewer').addEventListener('click', function() {
+                console.log("Reset button clicked");
+                document.getElementById('resetViewer').disabled = true;
+
+                // Clear the hidden input and disable the submit button
+                document.getElementById('position').value = 'reset';
+                document.getElementById('mutation_aa').value = '';  // Clear amino acid selection
+                document.getElementById('reset').value = 1;
+                document.getElementById('startMutation').disabled = true;
+                // Reset the sequence panel
+                document.querySelectorAll('#sequence-panel span').forEach(function(span) {
+                    span.style.backgroundColor = '';
+                    span.style.borderColor = 'transparent'; 
+                });
+
+                // Submit the form to ensure the reset value is sent
+                document.querySelector('form').submit();
+            });
+
+            // Debug form submission
+            document.querySelector('form').addEventListener('submit', function(e) {
+                    console.log("Form submitted with position:", document.getElementById('position').value);
+                });
+            });
+        </script>
+    </main>
+    <footer>
+        <div class="footer-images">
+            <img src="/static/images/logo.png" alt="Logo" />
+        </div>
+    </footer>
+</body>
+</html>

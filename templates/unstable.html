@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Design de Proteínas - Instável</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.2.0/build/pdbe-molstar-plugin.js"></script>
+
+    <style>
+        /* Base styling for the body and content */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #222;
+        }
+
+        main {
+            max-width: 960px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Protein structure viewer */
+        #myViewer {
+            width: 100%;
+            height: 500px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><strong>Protein Mutator - Instável</strong></li>
+            <li><a href="https://lnbio.cnpem.br/" target="_blank">Site LNBio</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Mutação Instável: Redução da Estabilidade da Proteína</h1>
+
+        <!-- Protein Structure Panel (Unstable Mutation) -->
+        <div id="myViewer"></div>
+
+    </main>
+
+    <footer>
+        <div class="footer-images">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" />
+        </div>
+    </footer>
+
+    <script>
+        // Show the protein structure visualization (Mol* plugin setup)
+        var viewerInstance = new PDBeMolstarPlugin();
+        var options = {
+            customData: {
+                url: "/static/pdb/{{ unstable_file }}",  // Use the unstable PDB trajectory file
+                format: "pdb"
+            },
+            alphafoldView: true,
+            trajectory: true,  // Enable trajectory rendering
+            bgColor: { r: 255, g: 255, b: 255 },
+            hideControls: false,
+            hideCanvasControls: [
+                'selection',
+                'animation',
+                'controlToggle',
+                'controlInfo',
+                'trajectory'
+            ]
+        };
+
+        var viewerContainer = document.getElementById("myViewer");
+        viewerInstance.render(viewerContainer, options);
+
+        // Function to change frames in the trajectory
+        function change_frame(idx) {
+            const hierarchy = viewerInstance.plugin.managers.structure.hierarchy.current;
+            if (!hierarchy || !hierarchy.models || hierarchy.models.length === 0) {
+                console.warn("No structure models available.");
+                return;
+            }
+
+            // Get the model reference from the first model
+            let model = hierarchy.models[0].cell.transform.ref;
+            
+            // Check for trajectory frames using the model index definition
+            const maxFrames = hierarchy.models[0].cell.params.definition.modelIndex.converted.max;
+            if (maxFrames <= 1) {
+                console.info("Only one frame available (max: " + maxFrames + "). Frame change is not applicable.");
+                return;
+            }
+
+            let update = viewerInstance.state.build();
+            update.to(model).update({ modelIndex: idx });
+            update.commit();
+        }
+
+        viewerInstance.events.loadComplete.subscribe(() => {
+            console.log("Plugin managers:", viewerInstance.plugin.managers);
+            const hierarchy = viewerInstance.plugin.managers.structure.hierarchy.current;
+            if (!hierarchy || !hierarchy.models || hierarchy.models.length === 0) {
+                console.warn("No structure models available on load.");
+                return;
+            }
+
+            // Get the max value from the model index
+            const maxFrames = hierarchy.models[0].cell.params.definition.modelIndex.converted.max;
+            console.info("Model max frames:", maxFrames);
+            if (maxFrames <= 1) {
+                console.info("Only one frame available (max: " + maxFrames + "). Frame updating skipped.");
+                return;
+            }
+
+            let totalFrames = maxFrames;
+            let currentFrame = 0;
+            const frameInterval = setInterval(() => {
+                if (currentFrame >= totalFrames) {
+                    clearInterval(frameInterval);
+                    console.info("Reached max frames. Stopping frame update.");
+                    return;
+                }
+                change_frame(currentFrame);
+                currentFrame++;
+            }, 10); // Update frames every 1 second
+        });
+    </script>
+
+</body>
+</html>
+

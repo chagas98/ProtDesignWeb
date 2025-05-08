@@ -1,4 +1,4 @@
-/* Base */
+/* Base styling for the body and content */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -13,106 +13,115 @@ main {
     padding: 20px;
 }
 
-/* Navigation */
-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background-color: #333;
+/* Protein Sequence Panel */
+#sequence-panel {
     display: flex;
-}
-
-nav ul li {
-    padding: 14px 20px;
-}
-
-nav ul li a, nav ul li strong {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-nav ul li a:hover {
-    text-decoration: underline;
-}
-
-/* Headings */
-h1 {
-    margin-top: 20px;
-    font-size: 1.8rem;
-    color: #333;
-}
-
-/* Form Styling */
-form {
-    background-color: #f7f7f7;
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-}
-
-form label {
-    display: block;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-form input[type="text"],
-form input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-form button {
-    margin-top: 15px;
-    padding: 10px 18px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
+    flex-wrap: wrap;
+    font-family: monospace;
     cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 5px;
 }
 
-form button:hover {
-    background-color: #0056b3;
+/* Highlight selected residue */
+#sequence-panel span {
+    display: inline-block;
+    text-align: center;
+    margin: 2px;
+    padding: 2px;
+    border: 1px solid transparent;
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
-/* Result */
-.result-message {
-    background-color: #e3f2fd;
-    border-left: 5px solid #2196f3;
-    padding: 10px;
-    margin-bottom: 20px;
-    font-weight: bold;
+#sequence-panel span:hover {
+    background-color: #eee;
 }
 
-/* Viewer */
+/* Protein Structure Panel */
 #myViewer {
     width: 100%;
     height: 500px;
-    margin-top: 20px;
-    border: 2px solid #eee;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    position: relative;
+}
+
+/* Button to start the activity */
+.start-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+}
+
+.start-button:hover {
+    background-color: #45a049;
+}
+
+/* Modal Popup */
+.popup-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
     border-radius: 10px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive */
-@media screen and (max-width: 600px) {
-    nav ul {
-        flex-direction: column;
-    }
-
-    nav ul li {
-        text-align: center;
-        padding: 10px;
-    }
-
-    form {
-        padding: 15px;
-    }
+.popup-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
 }
+
+.close-button {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    background-color: #da190b;
+}
+
+/* Styling for footer */
+footer {
+    background-color: #f0f0f0;
+    padding: 30px;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    margin-top: 2px;
+}
+
+.footer-images img {
+    max-width: 700px;
+    margin: 0 10px;
+    vertical-align: middle;
+    transition: transform 0.2s ease-in-out;
+}
+
+.footer-images img:hover {
+    transform: scale(1.1);
+}
+

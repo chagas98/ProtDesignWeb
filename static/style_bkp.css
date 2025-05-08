@@ -1,0 +1,180 @@
+/* Base */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #222;
+}
+
+main {
+    max-width: 960px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Navigation */
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    display: flex;
+}
+
+nav ul li {
+    padding: 14px 20px;
+}
+
+nav ul li a, nav ul li strong {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Headings */
+h1 {
+    margin-top: 20px;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+/* Stability Bar */
+.stability-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.bar {
+    height: 100%;
+    border-radius: 10px;
+    background-color: #4CAF50; /* Green for stabilizing */
+    transition: width 0.5s;
+}
+
+/* Red bar for destabilizing mutations */
+.bar[data-type="destabilizing"] {
+    background-color: #f44336; /* Red for destabilizing */
+}
+
+/* Mutation buttons */
+.mutation-btn {
+    padding: 8px 16px;
+    margin: 5px 0;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.mutation-btn:hover {
+    background-color: #45a049;
+}
+
+/* Flexbox container to align the panels */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align top, so both panels align at the top */
+    margin-bottom: 20px;
+}
+
+.sequence-panel {
+    flex: 1; /* Takes up available space */
+    margin-right: 20px; /* Space between the panels */
+    border: 1px solid #ccc;
+    padding: 10px;
+    overflow: auto;
+}
+
+.mutation-buttons {
+    flex: 0 0 200px; /* Fixed width for the buttons panel */
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Form Styling */
+form {
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+form input[type="text"],
+form input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form button {
+    margin-top: 15px;
+    padding: 10px 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Result */
+.result-message {
+    background-color: #e3f2fd;
+    border-left: 5px solid #2196f3;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Viewer */
+#myViewer {
+    width: 100%;
+    height: 500px;
+    margin-top: 20px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+    nav ul {
+        flex-direction: column;
+    }
+
+    nav ul li {
+        text-align: center;
+        padding: 10px;
+    }
+
+    form {
+        padding: 15px;
+    }
+}
