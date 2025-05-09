@@ -298,14 +298,15 @@
                     const interval = setInterval(() => {
                         if (bar_value_prob > 0) {
                             updateProgress(val);
+                            if (val >= bar_value_prob) clearInterval(interval);
                             val += 0.1;
                             if (val >= bar_value_prob) clearInterval(interval);
                         } else {
                             updateProgress(val);
+                            if (val <= bar_value_prob) clearInterval(interval);
                             val -= 0.1;
                         }
-                        if (val == bar_value_prob) clearInterval(interval);
-                    }, 300);
+                    }, 200);
                     return;
                 }
                 
