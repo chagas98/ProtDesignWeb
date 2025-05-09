@@ -7,6 +7,122 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.2.0/build/pdbe-molstar-plugin.js"></script>
 
     <style>
+        /* Fancy Popup on the Right Side with slide-in animation */
+        .fancy-popup {
+            display: block; /* Make sure it's in the DOM */
+            position: fixed;
+            top: 50%;
+            right: -320px; /* Start off-screen (width + margin) */
+            transform: translateY(-50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px 0 0 10px;
+            box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            width: 300px;
+            transition: right 1s ease;
+        }
+        .fancy-popup.show {
+            right: 20px; /* Slide in to the right */
+        }
+
+        .fancy-popup h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .fancy-popup button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .fancy-popup button:hover {
+            background-color: #45a049;
+        }
+
+        .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        }
+
+        .label-top, .label-bottom {
+        font-size: 1rem;
+        letter-spacing: 1px;
+        margin: 10px 0;
+        text-shadow: 0 0 5px rgba(255,255,255,0.2);
+        }
+
+        .label-top {
+        color: white;
+        }
+
+        .label-bottom {
+        color: white;
+        }
+
+        .bar-container {
+        position: relative;
+        width: 60px;
+        height: 600px;
+        background: linear-gradient(to top, #333, #555);
+        border-radius: 30px;
+        border: 2px solid #888;
+        box-shadow: inset 0 0 10px #000, 0 0 10px rgba(255,255,255,0.1);
+        overflow: hidden;
+        }
+
+        .bar-fill {
+        position: absolute;
+        width: 100%;
+        transition: height 0.6s ease, top 0.6s ease;
+        filter: drop-shadow(0 0 6px rgba(255,255,255,0.2));
+        }
+
+        .bar-fill.positive {
+        background: linear-gradient(to top, #32cd32, #7CFC00);
+        bottom: 50%;
+        transform-origin: bottom;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        }
+
+        .bar-fill.negative {
+        background: linear-gradient(to bottom, #ff0000, #ff6347);
+        top: 50%;
+        transform-origin: top;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+        }
+
+        .tick-labels {
+        position: absolute;
+        width: 100%;
+        height: 97%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.3rem;
+        padding: 10px 0;
+        pointer-events: none;
+        color: #ccc;
+        text-shadow: 0 0 3px #000;
+        }
+
+        .bar-left {
+        position: fixed;
+        left: 20%;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+        }
         /* Base styling for the body and content */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -37,23 +153,72 @@
 
     <main>
 
-        <!-- Protein Structure Panel (Unstable Mutation) -->
+        <!-- Protein Structure Panel (Stable Mutation) -->
         <div id="myViewer"></div>
+
+        <!-- Inside your Fancy Popup HTML -->
+        <div id="fancyPopup" class="fancy-popup">
+            <h2 id="fancyPopupTitle"> Processando... </h2>
+            <!-- New message element added below -->
+            <p id="fancyPopupMessage">Carregando trajetórias...</p>
+        </div>
+
+        <div class="bar-left">
+        <div class="wrapper">
+            <div class="label-top">ESTABILIZANTE</div>
+          
+            <div class="bar-container">
+              <div id="progress-bar" class="bar-fill"></div>
+              <div class="tick-labels">
+                <div>1</div>
+                <div>0</div>
+                <div>-1</div>
+              </div>
+            </div>
+        </div>
+            <div class="label-bottom">DESESTABILIZANTE</div>
+          </div>
 
     </main>
 
 
     <script>
+        // Function to display the fancy popup 
+        function showFancyPopup() {
+            document.getElementById("fancyPopup").style.display = 'block';
+        }
+
+        function updateProgress(value) {
+            const bar = document.getElementById('progress-bar');
+            bar.classList.remove('positive', 'negative');
+            const clamped = Math.max(-1, Math.min(1, value));
+            const height = Math.abs(clamped) * 50 + '%'; // 50% = half container
+
+            if (clamped > 0) {
+            bar.classList.add('positive');
+            bar.style.height = height;
+            bar.style.top = 'auto';
+            bar.style.bottom = '50%';
+            } else if (clamped < 0) {
+            bar.classList.add('negative');
+            bar.style.height = height;
+            bar.style.top = '50%';
+            bar.style.bottom = 'auto';
+            } else {
+            bar.style.height = '0%';
+            }
+        }
+
         // Show the protein structure visualization (Mol* plugin setup)
         var viewerInstance = new PDBeMolstarPlugin();
         var options = {
             customData: {
-                url: "/static/pdb/{{ unstable_file }}",  // Use the unstable PDB trajectory file
+                url: "/static/pdb/{{ unstable_file }}",  // Use the stable PDB trajectory file
                 format: "pdb"
             },
             alphafoldView: true,
             trajectory: true,  // Enable trajectory rendering
-            bgColor: { r: 255, g: 255, b: 0 },
+            bgColor: { r: 0, g: 255, b: 255 },
             hideControls: true,
             expanded: true,
             hideCanvasControls: [
@@ -109,15 +274,55 @@
 
             let totalFrames = maxFrames;
             let currentFrame = 0;
+            // Create and insert the progress bar element
+            let progressBarContainer = document.createElement("div");
+            progressBarContainer.id = "bar_container";
+            progressBarContainer.style = "margin-top:10px; width:100%; height:20px; background-color:#e0e0e0; border-radius:5px; overflow:hidden;";
+            let progressBar = document.createElement("div");
+            progressBar.id = "loading_bar";
+            progressBar.style = "width:0%; height:100%; background-color:#4CAF50;";
+            progressBarContainer.appendChild(progressBar);
+            document.getElementById("fancyPopup").appendChild(progressBarContainer);
+
             const frameInterval = setInterval(() => {
                 if (currentFrame >= totalFrames) {
                     clearInterval(frameInterval);
+                    document.getElementById("fancyPopupTitle").innerText = "Processamento Completo";
                     console.info("Reached max frames. Stopping frame update.");
+                    
+                    // Once frames are complete, show the bar value popup after a brief delay.
+                    let val = 0;
+                    let bar_value_prob = {{ bar_value }};
+                    
+                    console.log("Bar value probability:", bar_value_prob);
+                    const interval = setInterval(() => {
+                        if (bar_value_prob > 0) {
+                            updateProgress(val);
+                            val += 0.1;
+                            if (val >= bar_value_prob) clearInterval(interval);
+                        } else {
+                            updateProgress(val);
+                            val -= 0.1;
+                        }
+                        if (val == bar_value_prob) clearInterval(interval);
+                    }, 300);
                     return;
                 }
+                
                 change_frame(currentFrame);
                 currentFrame++;
-            }, 10); // Update frames every 1 second
+                // Update progress bar width based on the current progress percentage
+                let progressPercentage = (currentFrame / totalFrames) * 100;
+                document.getElementById("loading_bar").style.width = progressPercentage + "%";
+                document.getElementById("fancyPopupMessage").innerText = "Passo " + currentFrame + " de " + totalFrames + " para finalizar";
+            }, 10);
+
+            // Delay the slide-in popup 1 seconds after the structure has loaded
+            setTimeout(function() {
+                document.getElementById("fancyPopup").style.right = "0";
+            }, 200);
+            
+
         });
     </script>
 

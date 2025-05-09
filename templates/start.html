@@ -119,6 +119,10 @@
             background-color: #45a049;
         }
 
+        .mutation-option.selected {
+            border: 2px solid #000;
+            background-color: #e0e0e0;
+        }
     </style>
 </head>
 
@@ -138,39 +142,114 @@
             </div>
         </div>
 
-        <!-- Modal Popup for Mutation Options -->
-        <div id="mutationOptionsModal" class="mutation-options-modal">
-            <div class="mutation-options-content">
+        <form id="mutationForm" method="POST" action="/start">
+            <!-- Hidden input to hold the mutation value -->
+            <input type="hidden" name="data-mutation" id="mutationValue">
+            <input type="hidden" name="data-position" id="position">
+            
+            <!-- Modal Popup for Mutation Options -->
+            <div id="mutationOptionsModal" class="mutation-options-modal">
+                <div class="mutation-options-content">
                 <h2>Escolha uma mutação</h2>
-                <!-- Dynamically generated mutation buttons -->
-                <button class="mutation-option" data-mutation="A">A</button>
-                <button class="mutation-option" data-mutation="C">C</button>
-                <button class="mutation-option" data-mutation="D">D</button>
-                <button class="mutation-option" data-mutation="E">E</button>
-                <button class="mutation-option" data-mutation="F">F</button>
-                <button class="mutation-option" data-mutation="G">G</button>
-                <button class="mutation-option" data-mutation="H">H</button>
-                <button class="mutation-option" data-mutation="I">I</button>
-                <button class="mutation-option" data-mutation="K">K</button>
-                <button class="mutation-option" data-mutation="L">L</button>
-                <button class="mutation-option" data-mutation="M">M</button>
-                <button class="mutation-option" data-mutation="N">N</button>
-                <button class="mutation-option" data-mutation="P">P</button>
-                <button class="mutation-option" data-mutation="Q">Q</button>
-                <button class="mutation-option" data-mutation="R">R</button>
-                <button class="mutation-option" data-mutation="S">S</button>
-                <button class="mutation-option" data-mutation="T">T</button>
-                <button class="mutation-option" data-mutation="V">V</button>
-                <button class="mutation-option" data-mutation="W">W</button>
-                <button class="mutation-option" data-mutation="Y">Y</button>
-                <button id="closeMutationOptionsModal" class="popup-button">Fechar</button>
-            </div>
-        </div>
+                <!-- Dynamically generated mutation buttons with amino acid images -->
+                <button class="mutation-option" data-mutation="ALA">
+                    <img src="{{ url_for('static', filename='images/aminoacids/alanine_noH.svg') }}" alt="Amino Acid A" width="64" height="64">
+                    <div style="margin-top: 4px;">Alanina</div>
+                </button>
+                <button class="mutation-option" data-mutation="CYS">
+                    <img src="{{ url_for('static', filename='images/aminoacids/cysteine_noH.svg') }}" alt="Amino Acid C" width="64" height="64">
+                    <div style="margin-top: 4px;">Cisteína</div>
+                </button>
+                <button class="mutation-option" data-mutation="ASP">
+                    <img src="{{ url_for('static', filename='images/aminoacids/aspartic_acid_noH.svg') }}" alt="ASP" width="64" height="64">
+                    <div style="margin-top: 4px;">Aspartato</div>
+                </button>
+                <button class="mutation-option" data-mutation="GLU">
+                    <img src="{{ url_for('static', filename='images/aminoacids/glutamic_acid_noH.svg') }}" alt="Amino Acid E" width="64" height="64">
+                    <div style="margin-top: 4px;">Glutamato</div>
+                </button>
+                <button class="mutation-option" data-mutation="PHE">
+                    <img src="{{ url_for('static', filename='images/aminoacids/phenylalanine_noH.svg') }}" alt="Amino Acid F" width="64" height="64">
+                    <div style="margin-top: 4px;">Fenilalina</div>
+                </button>
+                <button class="mutation-option" data-mutation="GLY">
+                    <img src="{{ url_for('static', filename='images/aminoacids/glycine_noH.svg') }}" alt="Amino Acid G" width="64" height="64">
+                    <div style="margin-top: 4px;">Glicina</div>
+                </button>
+                <button class="mutation-option" data-mutation="HIS">
+                    <img src="{{ url_for('static', filename='images/aminoacids/histidine_noH.svg') }}" alt="Amino Acid H" width="64" height="64">
+                    <div style="margin-top: 4px;">Histidina</div>
+                </button>
+                <button class="mutation-option" data-mutation="ILE">
+                    <img src="{{ url_for('static', filename='images/aminoacids/isoleucine_noH.svg') }}" alt="Amino Acid I" width="64" height="64">
+                    <div style="margin-top: 4px;">Isoleucina</div>
+                </button>
+                <button class="mutation-option" data-mutation="LYS">
+                    <img src="{{ url_for('static', filename='images/aminoacids/lysine_noH.svg') }}" alt="Amino Acid K" width="64" height="64">
+                    <div style="margin-top: 4px;">Lisina</div>
+                </button>
+                <button class="mutation-option" data-mutation="LEU">
+                    <img src="{{ url_for('static', filename='images/aminoacids/leucin_noH.svg') }}" alt="Amino Acid L" width="64" height="64">
+                    <div style="margin-top: 4px;">Leucina</div>
+                </button>
+                <button class="mutation-option" data-mutation="MET">
+                    <img src="{{ url_for('static', filename='images/aminoacids/methionine_noH.svg') }}" alt="Amino Acid M" width="64" height="64">
+                    <div style="margin-top: 4px;">Metionina</div>
+                </button>
+                <button class="mutation-option" data-mutation="ASP">
+                    <img src="{{ url_for('static', filename='images/aminoacids/asparagine_noH.svg') }}" alt="Amino Acid N" width="64" height="64">
+                    <div style="margin-top: 4px;">Asparagina</div>
+                </button>
+                <button class="mutation-option" data-mutation="PRO">
+                    <img src="{{ url_for('static', filename='images/aminoacids/proline_noH.svg') }}" alt="Amino Acid P" width="64" height="64">
+                    <div style="margin-top: 4px;">Prolina</div>
+                </button>
+                <button class="mutation-option" data-mutation="GLN">
+                    <img src="{{ url_for('static', filename='images/aminoacids/glutamine_noH.svg') }}" alt="Amino Acid Q" width="64" height="64">
+                    <div style="margin-top: 4px;">Glutamina</div>
+                </button>
+                <button class="mutation-option" data-mutation="ARG">
+                    <img src="{{ url_for('static', filename='images/aminoacids/arginine_noH.svg') }}" alt="Amino Acid R" width="64" height="64">
+                    <div style="margin-top: 4px;">Arginina</div>
+                </button>
+                <button class="mutation-option" data-mutation="SER">
+                    <img src="{{ url_for('static', filename='images/aminoacids/serine_noH.svg') }}" alt="Amino Acid S" width="64" height="64">
+                    <div style="margin-top: 4px;">Serina</div>
+                </button>
+                <button class="mutation-option" data-mutation="THR">
+                    <img src="{{ url_for('static', filename='images/aminoacids/threonine_noH.svg') }}" alt="Amino Acid T" width="64" height="64">
+                    <div style="margin-top: 4px;">Threonina</div>
+                </button>
+                <button class="mutation-option" data-mutation="VAL">
+                    <img src="{{ url_for('static', filename='images/aminoacids/valine_noH.svg') }}" alt="Amino Acid V" width="64" height="64">
+                    <div style="margin-top: 4px;">Valina</div>
+                </button>
+                <button class="mutation-option" data-mutation="TRP">
+                    <img src="{{ url_for('static', filename='images/aminoacids/tryptophan_noH.svg') }}" alt="Amino Acid W" width="64" height="64">
+                    <div style="margin-top: 4px;">Triptofano</div>
+                </button>
+                <button class="mutation-option" data-mutation="TYR">
+                    <img src="{{ url_for('static', filename='images/aminoacids/tyrosine_noH.svg') }}" alt="Amino Acid Y" width="64" height="64">
+                    <div style="margin-top: 4px;">Tirosina</div>
+                </button>
+                <!-- The original amino acid button can be marked with the "selected" class -->
+                <!-- For example: -->
+                <!-- <button class="mutation-option selected" data-mutation="X">...</button> -->
 
+                <!-- Fechar button in the last line alone -->
+                <div style="width:100%; text-align: center; margin-top: 10px;">
+                    <button id="closeMutationOptionsModal" class="popup-button">
+                    <div style="margin-top: 4px;">Fechar</div>
+                    </button>
+                </div>
+                </div>
+            </div>
+        </form>
     </main>
 
         <script>
         var selectedPosition = null;
+        window.originalResidue = null;
         
 
         // Show the protein structure visualization (Mol* plugin setup)
@@ -196,21 +275,38 @@
                     console.log("Clicked residue data:", eventData);
                     if (eventData && eventData.residueNumber) {
                         var residueNumber = eventData.residueNumber;
+
                         console.log("Clicked residue number:", residueNumber);
                         
-		        // Set the selected position to the clicked residue
-                selectedPosition = residueNumber;
-
-                // Show the mutation confirmation popup
-                document.getElementById('mutationPopup').style.display = 'flex';
-                     
+                        // Assume eventData.residueName holds the one-letter amino acid (e.g., "A", "C", etc.)
+                        var residueName = eventData.comp_id || "";
+                        console.log("Clicked residue number:", residueNumber, "Residue:", residueName);
+                        
+                        // Set the selected position and store the original amino acid
+                        selectedPosition = residueNumber;
+                        window.originalResidue = residueName;
+                        
+                        // send position value
+                        document.getElementById('position').value = residueNumber;
+                        //document.getElementById('data-position').submit();
+                        
+                        // Show the mutation confirmation popup
+                        document.getElementById('mutationPopup').style.display = 'flex';
                     }
                 });
 
         // When 'Sim' button is clicked, redirect to the mutation page
         document.getElementById('yesButton').addEventListener('click', function() {
             console.log("Mutating residue: " + selectedPosition);
-            document.getElementById("mutationPopup").style.display = "none"
+            document.getElementById("mutationPopup").style.display = "none";
+
+        // Highlight the original amino acid option
+            if (window.originalResidue) {
+                var origButton = document.querySelector('.mutation-option[data-mutation="'+ window.originalResidue +'"]');
+                if (origButton) {
+                    origButton.classList.add('selected');
+                }
+            }
             document.getElementById('mutationOptionsModal').style.display = 'flex'; 
         });
 
@@ -221,6 +317,14 @@
 
 	// Close the mutation options modal when 'Fechar' is clicked
         document.getElementById('closeMutationOptionsModal').addEventListener('click', function() {
+            // Remove highlight from original amino acid option
+            if (window.originalResidue) {
+                var origButton = document.querySelector('.mutation-option[data-mutation="'+ window.originalResidue +'"]');
+                if (origButton) {
+                    origButton.classList.remove('selected');
+                }
+            }
+            
             document.getElementById('mutationOptionsModal').style.display = 'none';
         });
 
@@ -228,11 +332,14 @@
         document.querySelectorAll('.mutation-option').forEach(function(button) {
             button.addEventListener('click', function() {
                 var mutation = this.getAttribute('data-mutation');
+
                 alert("Mutação aplicada: " + mutation);
                 // Show the mutation processing modal
-                var mutationStatus = "{{ mutation_result }}".includes("ESTABILIZANTE") ? "stable" : "unstable"; 
-		console.log(mutationStatus);
-	        window.location.href = "/" + mutationStatus;  // Redirect to appropriate page
+                document.getElementById('mutationValue').value = mutation;
+                document.getElementById('mutationForm').submit();
+                //var mutationStatus = "{{ mutation_result }}".includes("ESTABILIZANTE") ? "stable" : "unstable"; 
+		        //console.log(mutationStatus);
+	        //window.location.href = "/" + mutationStatus;  // Redirect to appropriate page
 	    });
         });
 
