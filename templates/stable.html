@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Design de Proteínas - Estável</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.3.0/build/pdbe-molstar-light.css" />
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.2.0/build/pdbe-molstar-plugin.js"></script>
 
     <style>
@@ -36,26 +34,14 @@
 </head>
 
 <body>
-    <nav>
-        <ul>
-            <li><strong>Protein Mutator - Estável</strong></li>
-            <li><a href="https://lnbio.cnpem.br/" target="_blank">Site LNBio</a></li>
-        </ul>
-    </nav>
 
     <main>
-        <h1>Mutação Estável: Aumento da Estabilidade da Proteína</h1>
 
         <!-- Protein Structure Panel (Stable Mutation) -->
         <div id="myViewer"></div>
 
     </main>
 
-    <footer>
-        <div class="footer-images">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" />
-        </div>
-    </footer>
 
     <script>
         // Show the protein structure visualization (Mol* plugin setup)
@@ -67,8 +53,9 @@
             },
             alphafoldView: true,
             trajectory: true,  // Enable trajectory rendering
-            bgColor: { r: 255, g: 255, b: 255 },
-            hideControls: false,
+            bgColor: { r: 0, g: 255, b: 255 },
+            hideControls: true,
+            expanded: true,
             hideCanvasControls: [
                 'selection',
                 'animation',

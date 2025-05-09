@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Design de Proteínas - Selecione a Posição</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.2.0/build/pdbe-molstar-plugin.js"></script>
+
+    <style>
+        /* Base styling for the body and content */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #222;
+        }
+
+        main {
+            max-width: 960px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Protein Sequence Panel */
+        #sequence-panel {
+            display: flex;
+            flex-wrap: wrap;
+            font-family: monospace;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        #sequence-panel span {
+            display: inline-block;
+            text-align: center;
+            margin: 2px;
+            padding: 2px;
+            border: 1px solid transparent;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        #sequence-panel span:hover {
+            background-color: #eee;
+        }
+
+        /* Protein Structure Panel */
+        #myViewer {
+            width: 100%;
+            height: 500px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        /* Modal Popup for "Mutar agora?" */
+        .mutation-process-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .mutation-process-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .mutation-process-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .mutation-process-content button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .mutation-process-content button:hover {
+            background-color: #45a049;
+        }
+
+        /* Custom Styling for the Button Inside Mol* */
+        #molstarControls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+
+        #toggleAtoms {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #toggleAtoms:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><strong>Protein Mutator</strong></li>
+            <li><a href="https://lnbio.cnpem.br/" target="_blank">Site LNBio</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Protein Mutator: Aumente a estabilidade da sua proteína</h1>
+
+        <!-- Protein Sequence Panel -->
+        <div id="sequence-panel">
+            {% for residue in sequence %}
+                <span data-pos="{{ loop.index }}">
+                    {{ residue }}<br>
+                    <small>{{ loop.index }}</small>
+                </span>
+            {% endfor %}
+        </div>
+
+        <!-- Protein Structure Panel -->
+        <div id="myViewer"></div>
+
+        <!-- Modal Popup for Mutation Confirmation -->
+        <div id="mutationPopup" class="mutation-process-modal">
+            <div class="mutation-process-content">
+                <h2>Quer mutar agora?</h2>
+                <button id="yesButton">Sim</button>
+                <button id="noButton">Não</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-images">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" />
+        </div>
+    </footer>
+
+    <script>
+        var selectedPosition = null;
+
+        // Show popup after selecting a position
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle click events on the sequence panel
+            document.querySelectorAll('#sequence-panel span').forEach(function(span) {
+                span.addEventListener('click', function() {
+                    // Remove previous highlights
+                    document.querySelectorAll('#sequence-panel span').forEach(function(s) {
+                        s.style.backgroundColor = '';
+                        s.style.borderColor = 'transparent';
+                    });
+
+                    // Highlight the selected residue
+                    this.style.backgroundColor = '#FFD700';
+                    this.style.borderColor = '#DAA520';
+
+                    // Get the selected position
+                    selectedPosition = this.getAttribute('data-pos');
+                    console.log("Selected position:", selectedPosition);
+
+                    // Trigger the same action as a click on the structure (simulate Mol* behavior)
+                    // Get the corresponding residue number for Mol*
+                    var residueNumber = selectedPosition;  // Mapping position to residue number
+
+                    // Simulate a click on the structure by programmatically triggering the click event
+                    var eventData = {
+                        residueNumber: residueNumber
+                    };
+                    var simulatedEvent = new CustomEvent('PDB.molstar.click', { detail: eventData });
+
+                    // Dispatch the custom event to trigger Mol* behavior
+                    document.dispatchEvent(simulatedEvent);
+
+                    // Show the mutation confirmation popup
+                    document.getElementById('mutationPopup').style.display = 'flex';
+                });
+            });
+
+            // Bind to the PDB.molstar.click event to handle clicks on the structure
+            document.addEventListener('PDB.molstar.click', function(e) {
+                var eventData = e.detail; // Contains information about the clicked residue
+                console.log("Clicked residue data:", eventData);
+                if (eventData && eventData.residueNumber) {
+                    var residueNumber = eventData.residueNumber;
+                    console.log("Clicked residue number:", residueNumber);
+
+                    // Find the corresponding span in the sequence panel
+                    var span = document.querySelector(`#sequence-panel span[data-pos="${residueNumber}"]`);
+                    console.log("Found span:", span);
+                    if (span) {
+                        // Trigger a click event on the span to highlight it and update the input
+                        span.click();
+                    }
+                }
+            });
+
+            // When 'Sim' button is clicked, redirect to the mutation page
+            document.getElementById('yesButton').addEventListener('click', function() {
+                window.location.href = "/start?position=" + selectedPosition;  // You may pass the position here
+            });
+
+            // When 'Não' button is clicked, hide the popup and stay on the current page
+            document.getElementById('noButton').addEventListener('click', function() {
+                document.getElementById('mutationPopup').style.display = 'none';
+            });
+
+            // Handle toggling the atom representation (stick and ball)
+            document.getElementById('toggleAtoms').addEventListener('click', function() {
+                // Toggle the visibility of atoms (stick and ball) using Mol*'s native functionality
+                const currentVisibility = viewerInstance.state.getState().structure.viewer.showAtoms;
+                viewerInstance.state.build().to('structure').set({ showAtoms: !currentVisibility }).commit();
+            });
+        });
+
+        // Show the protein structure visualization (Mol* plugin setup)
+        var viewerInstance = new PDBeMolstarPlugin();
+        var options = {
+            customData: {
+                url: "/static/pdb/{{ pdb_file }}",  // Use the stable or unstable PDB file
+                format: "pdb"
+            },
+            alphafoldView: false,
+	    sequencePanel: true,
+            bgColor: { r: 255, g: 255, b: 255 },
+            // hideControls: false,
+            // hideCanvasControls: [
+            //    'selection',
+            //    'animation',
+            //    'controlToggle',
+            //    'controlInfo',
+            //    'trajectory'
+            //]
+        };
+        
+
+        var viewerContainer = document.getElementById("myViewer");
+        viewerInstance.render(viewerContainer, options);
+        
+
+        // Function to focus on the residue and highlight sidechains/nearby residues
+        viewerInstance.events.click.subscribe((event) => {
+            const residueNumber = event.eventData.residueNumber;
+            if (residueNumber) {
+                console.log("Clicked residue:", residueNumber);
+
+                // Highlight the corresponding residue in the sequence panel
+                document.querySelectorAll('#sequence-panel span').forEach(function(span) {
+                    if (span.getAttribute('data-pos') == residueNumber) {
+                        span.style.backgroundColor = '#FFD700';
+                        span.style.borderColor = '#DAA520';
+                    } else {
+                        span.style.backgroundColor = '';
+                        span.style.borderColor = 'transparent';
+                    }
+                });
+
+                // Zoom into the clicked residue in the structure, focusing on sidechains and nearby residues
+                viewerInstance.visual.focus([{
+                    struct_asym_id: 'A',
+                    start_residue_number: residueNumber,
+                    end_residue_number: residueNumber
+                }]);
+
+                // Show the mutation confirmation popup
+                document.getElementById('mutationPopup').style.display = 'flex';
+            }
+        });
+
+    </script>
+
+</body>
+</html>
+
