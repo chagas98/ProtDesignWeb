@@ -9,10 +9,10 @@
     <style>
         /* Fancy Popup on the Right Side with slide-in animation */
         .fancy-popup {
-            display: block; /* Make sure it's in the DOM */
+            display: block;
             position: fixed;
             top: 50%;
-            right: -320px; /* Start off-screen (width + margin) */
+            right: -320px;
             transform: translateY(-50%);
             background-color: white;
             padding: 20px;
@@ -23,7 +23,7 @@
             transition: right 1s ease;
         }
         .fancy-popup.show {
-            right: 20px; /* Slide in to the right */
+            right: 20px;
         }
 
         .fancy-popup h2 {
@@ -47,85 +47,85 @@
         }
 
         .wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .label-top, .label-bottom {
-        font-size: 1rem;
-        letter-spacing: 1px;
-        margin: 10px 0;
-        text-shadow: 0 0 5px rgba(255,255,255,0.2);
+            font-size: 1rem;
+            letter-spacing: 1px;
+            margin: 10px 0;
+            text-shadow: 0 0 5px rgba(255,255,255,0.2);
         }
 
         .label-top {
-        color: white;
-        font-weight: bold;
-        text-transform: uppercase;
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .label-bottom {
-        color: white;
-        font-weight: bold;
-        text-transform: uppercase;
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .bar-container {
-        position: relative;
-        width: 60px;
-        height: 600px;
-        background: linear-gradient(to top, #333, #555);
-        border-radius: 30px;
-        border: 2px solid #888;
-        box-shadow: inset 0 0 10px #000, 0 0 10px rgba(255,255,255,0.1);
-        overflow: hidden;
+            position: relative;
+            width: 60px;
+            height: 600px;
+            background: linear-gradient(to top, #333, #555);
+            border-radius: 30px;
+            border: 2px solid #888;
+            box-shadow: inset 0 0 10px #000, 0 0 10px rgba(255,255,255,0.1);
+            overflow: hidden;
         }
 
         .bar-fill {
-        position: absolute;
-        width: 100%;
-        transition: height 0.6s ease, top 0.6s ease;
-        filter: drop-shadow(0 0 6px rgba(255,255,255,0.2));
+            position: absolute;
+            width: 100%;
+            transition: height 0.6s ease, top 0.6s ease;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.2));
         }
 
         .bar-fill.positive {
-        background: linear-gradient(to top, #32cd32, #7CFC00);
-        bottom: 50%;
-        transform-origin: bottom;
-        border-top-left-radius: 30px;
-        border-top-right-radius: 30px;
+            background: linear-gradient(to top, #32cd32, #7CFC00);
+            bottom: 50%;
+            transform-origin: bottom;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
         }
 
         .bar-fill.negative {
-        background: linear-gradient(to bottom, #ff0000, #ff6347);
-        top: 50%;
-        transform-origin: top;
-        border-bottom-left-radius: 30px;
-        border-bottom-right-radius: 30px;
+            background: linear-gradient(to bottom, #ff0000, #ff6347);
+            top: 50%;
+            transform-origin: top;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
         }
 
         .tick-labels {
-        position: absolute;
-        width: 100%;
-        height: 97%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 1.3rem;
-        padding: 10px 0;
-        pointer-events: none;
-        color: #ccc;
-        text-shadow: 0 0 3px #000;
+            position: absolute;
+            width: 100%;
+            height: 97%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.3rem;
+            padding: 10px 0;
+            pointer-events: none;
+            color: #ccc;
+            text-shadow: 0 0 3px #000;
         }
 
         .bar-left {
-        position: fixed;
-        left: 20%;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 1000;
+            position: fixed;
+            left: 20%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
         }
         /* Base styling for the body and content */
         body {
@@ -150,6 +150,45 @@
             border: 1px solid #ccc;
             position: relative;
         }
+
+        /* Reset button styling in the lower right */
+        #resetButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10000;
+            width: 150px;
+            height: 80px;
+            font-size: 1.2rem;
+            
+        }
+
+            /* Reset button styling in the lower right */
+        #inicioButton {
+            position: fixed;
+            bottom: 20px;
+            right: 200px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10000;
+            width: 150px;
+            height: 80px;
+            font-size: 1.2rem;
+        }
+
+        #resetButton:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 
@@ -157,34 +196,37 @@
 
     <main>
 
-        <!-- Protein Structure Panel (Stable Mutation) -->
-        <div id="myViewer"></div>
+        <!-- Protein Structure Panel (stable Mutation) -->
+        <div id="myViewer" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;"></div>
 
         <!-- Inside your Fancy Popup HTML -->
         <div id="fancyPopup" class="fancy-popup">
-            <h2 id="fancyPopupTitle"> Processando... </h2>
+            <h2 id="fancyPopupTitle"> Calculando... </h2>
             <!-- New message element added below -->
             <p id="fancyPopupMessage">Carregando trajetórias...</p>
         </div>
 
         <div class="bar-left">
-        <div class="wrapper">
-            <div class="label-top">ESTABILIZANTE</div>
-          
-            <div class="bar-container">
-              <div id="progress-bar" class="bar-fill"></div>
-              <div class="tick-labels">
-                <div>1</div>
-                <div>0</div>
-                <div>-1</div>
-              </div>
+            <div class="wrapper">
+                <div class="label-top">ESTABILIZANTE</div>
+              
+                <div class="bar-container">
+                  <div id="progress-bar" class="bar-fill"></div>
+                  <div class="tick-labels">
+                    <div>1</div>
+                    <div>0</div>
+                    <div>-1</div>
+                  </div>
+                </div>
             </div>
-        </div>
             <div class="label-bottom">DESESTABILIZANTE</div>
-          </div>
-
+        </div>
+        
     </main>
 
+    <!-- Reset button to return to start.html -->
+    <button id="resetButton" onclick="window.location.href='start'">Novo Cálculo</button>
+    <button id="inicioButton" onclick="window.location.href='/'">Início</button>
 
     <script>
         // Function to display the fancy popup 
@@ -196,20 +238,20 @@
             const bar = document.getElementById('progress-bar');
             bar.classList.remove('positive', 'negative');
             const clamped = Math.max(-1, Math.min(1, value));
-            const height = Math.abs(clamped) * 50 + '%'; // 50% = half container
+            const height = Math.abs(clamped) * 50 + '%';
 
             if (clamped > 0) {
-            bar.classList.add('positive');
-            bar.style.height = height;
-            bar.style.top = 'auto';
-            bar.style.bottom = '50%';
+                bar.classList.add('positive');
+                bar.style.height = height;
+                bar.style.top = 'auto';
+                bar.style.bottom = '50%';
             } else if (clamped < 0) {
-            bar.classList.add('negative');
-            bar.style.height = height;
-            bar.style.top = '50%';
-            bar.style.bottom = 'auto';
+                bar.classList.add('negative');
+                bar.style.height = height;
+                bar.style.top = '50%';
+                bar.style.bottom = 'auto';
             } else {
-            bar.style.height = '0%';
+                bar.style.height = '0%';
             }
         }
 
@@ -217,11 +259,11 @@
         var viewerInstance = new PDBeMolstarPlugin();
         var options = {
             customData: {
-                url: "/static/pdb/{{ stable_file }}",  // Use the stable PDB trajectory file
+                url: "/static/pdb/{{ stable_file }}",
                 format: "pdb"
             },
             alphafoldView: true,
-            trajectory: true,  // Enable trajectory rendering
+            trajectory: true,
             bgColor: { r: 255, g: 255, b: 255 },
             hideControls: true,
             expanded: true,
@@ -245,10 +287,7 @@
                 return;
             }
 
-            // Get the model reference from the first model
             let model = hierarchy.models[0].cell.transform.ref;
-            
-            // Check for trajectory frames using the model index definition
             const maxFrames = hierarchy.models[0].cell.params.definition.modelIndex.converted.max;
             if (maxFrames <= 1) {
                 console.info("Only one frame available (max: " + maxFrames + "). Frame change is not applicable.");
@@ -268,7 +307,6 @@
                 return;
             }
 
-            // Get the max value from the model index
             const maxFrames = hierarchy.models[0].cell.params.definition.modelIndex.converted.max;
             console.info("Model max frames:", maxFrames);
             if (maxFrames <= 1) {
@@ -278,7 +316,6 @@
 
             let totalFrames = maxFrames;
             let currentFrame = 0;
-            // Create and insert the progress bar element
             let progressBarContainer = document.createElement("div");
             progressBarContainer.id = "bar_container";
             progressBarContainer.style = "margin-top:10px; width:100%; height:20px; background-color:#e0e0e0; border-radius:5px; overflow:hidden;";
@@ -291,12 +328,11 @@
             const frameInterval = setInterval(() => {
                 if (currentFrame >= totalFrames) {
                     clearInterval(frameInterval);
-                    document.getElementById("fancyPopupTitle").innerText = "Processamento Completo";
+                    document.getElementById("fancyPopupTitle").innerText = "Cálculo completo";
                     console.info("Reached max frames. Stopping frame update.");
                     
-                    // Once frames are complete, show the bar value popup after a brief delay.
                     let val = 0;
-                    let bar_value_prob = {{ bar_value }};
+                    let bar_value_prob = parseFloat('{{ bar_value }}');
                     
                     console.log("Bar value probability:", bar_value_prob);
                     const interval = setInterval(() => {
@@ -304,7 +340,6 @@
                             updateProgress(val);
                             if (val >= bar_value_prob) clearInterval(interval);
                             val += 0.1;
-                            if (val >= bar_value_prob) clearInterval(interval);
                         } else {
                             updateProgress(val);
                             if (val <= bar_value_prob) clearInterval(interval);
@@ -315,22 +350,21 @@
                 }
                 
                 change_frame(currentFrame);
-                currentFrame++;
-                // Update progress bar width based on the current progress percentage
+                currentFrame += 5;
+                if (currentFrame >= totalFrames) {
+                    currentFrame = totalFrames;
+                }
                 let progressPercentage = (currentFrame / totalFrames) * 100;
                 document.getElementById("loading_bar").style.width = progressPercentage + "%";
                 document.getElementById("fancyPopupMessage").innerText = "Passo " + currentFrame + " de " + totalFrames + " para finalizar";
             }, 10);
 
-            // Delay the slide-in popup 1 seconds after the structure has loaded
             setTimeout(function() {
                 document.getElementById("fancyPopup").style.right = "0";
             }, 200);
-            
-
         });
+        
     </script>
 
 </body>
 </html>
-

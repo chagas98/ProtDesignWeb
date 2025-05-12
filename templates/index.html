@@ -2,28 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Design de Proteínas</title>
+    <title>Protein Design</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        /* Base styling for the body and content */
+        /* Base styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #ffffff;
-            color: #222;
-            text-align: center;
+            background-color: #ffffff; /* fallback background color */
+            background-image: url("{{ url_for('static', filename='images/background.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        /* Button to start the activity */
+        /* Header container styling: transparent gray background */
+        .header-container {
+            background-color: rgba(128, 128, 128, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 30%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Header title styling */
+        h1.title {
+            text-transform: uppercase;
+            color: black;
+            margin: 0 0 20px;
+        }
+
+        /* Header image styling */
+        .header-image {
+            max-width: 50%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        /* Button styling */
         .start-button {
             background-color: #4CAF50;
             color: white;
@@ -39,16 +72,64 @@
         .start-button:hover {
             background-color: #45a049;
         }
+        
+        /* QR code block styling */
+        .qr-block {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            width: 150px;
+            text-align: center;
+        }
+        
+        .qr-block img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Footer styling */
+        footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        footer img {
+            max-width: 600px;
+            height: auto;
+            margin: 0 1px;
+        }
     </style>
 </head>
 <body>
+    <!-- QR Code block -->
+    <div class="qr-block">
+        <img src="{{ url_for('static', filename='images/lnbiosite.png') }}" alt="QR Code">
+        <p><a href="https://lnbio.cnpem.br/" target="_blank">Site LNBio</a></p>
+    </div>
 
+    <!-- Header container with title and image -->
+    <div class="header-container">
+        <h1 class="title">Grupo de Design de Proteínas</h1>
+        <img src="{{ url_for('static', filename='images/carimbo.png') }}" alt="Header Image" class="header-image">
+    </div>
+
+    <!-- Start button -->
     <button id="startButton" class="start-button">Iniciar</button>
+
+    <!-- Footer -->
+    <footer>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logolnbio">
+    </footer>
 
     <script>
         // Redirect to the main page when the "Iniciar" button is clicked
         document.getElementById("startButton").addEventListener("click", function() {
-            window.location.href = "/start"; // This redirects to the page with the sequence and structure
+            window.location.href = "/start";
         });
     </script>
 
