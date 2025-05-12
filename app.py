@@ -38,8 +38,8 @@ convert_aa_names = {
 
 THRESHOLD = 0.0  # valor fictício de threshold para decidir entre estável/instável
 TOPOL_FILE = "GH1_AF_renum.pdb"  # arquivo PDB original
-STABLE_FILE = "stable_rebuilt_trajectory.pdb"
-UNSTABLE_FILE = "unstable_rebuilt_trajectory.pdb"  # arquivo PDB para mutações instáveis
+STABLE_FILE = "folding_stable_rebuilt_trajectory_backbone.pdb"
+UNSTABLE_FILE = "folding_unstable_rebuilt_trajectory_backbone.pdb"  # arquivo PDB para mutações instáveis
 
 @app.route("/", methods=["GET"])
 def index():
@@ -78,7 +78,7 @@ def start():
         if  mutation_aa:
             print(f"Mutation AA2: {mutation_aa}")
             # Get the corresponding row (position) and column (mutation amino acid)
-            row = df.iloc[position]
+            row = df.iloc[position-1]
             aa_value = row[mutation_aa]  # Get the value from the DataFrame cell
             print(f"AA Value: {aa_value}")
             # Determine if the mutation is stabilizing or destabilizing
