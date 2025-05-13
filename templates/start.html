@@ -35,8 +35,7 @@
         }
 
         /* Modal Popup for "Mutar agora?" */
-        .mutation-process-modal {
-            display: none; /* Hidden by default */
+        .instructions-start {
             position: fixed;
             top: 0;
             left: 0;
@@ -45,7 +44,49 @@
             background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 1000;
+        }
+
+        .instructions-start-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructions-start-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .instructions-start-content button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .instructions-start-content button:hover {
+            background-color: #45a049;
+        }
+        
+        /* Modal Popup for "Mutar agora?" */
+        .mutation-process-modal {
+            display: none; /* Initially hidden */
+            top: 0;
+            left: 0;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            z-index: 1002; /* Ensure it appears in front of everything */
         }
 
         .mutation-process-content {
@@ -78,7 +119,7 @@
 
         /* Modal Popup for Mutation Options */
         .mutation-options-modal {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -87,7 +128,7 @@
             background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 1003;
         }
 
         .mutation-options-content {
@@ -123,6 +164,27 @@
             border: 2px solid #000;
             background-color: #e0e0e0;
         }
+
+        .protein-description {
+            display: none; /* Mostrar inicialmente */
+            position: fixed;
+            top: 20%;
+            left: 3%;
+            width: auto;
+            height: auto;
+            justify-content: flex-start;
+            align-items: flex-start;
+            z-index: 1005;
+        }
+
+        .protein-description-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 
@@ -133,10 +195,31 @@
         <!-- Protein Structure Panel -->
         <div id="myViewer" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;"></div>
 
+        <!-- Popup to explain -->
+        <div id="instructionsPopup" class="instructions-start">
+            <div class="instructions-start-content">
+                <h2>Instruções</h2>
+                <p>Selecione um aminoácido na estrutura (centro) ou na sequência (acima &uarr;) da proteína para modificar.</p>
+                <p>Após selecionar, clique em "Sim" para escolher a modificação desejada.</p>
+                <p>Você pode escolher entre várias opções de aminoácidos.</p>
+                <button id="continueInstrunctions">Continuar</button>
+            </div>
+        </div>
+
+        <!-- Protein description popup -->
+        <div id="proteinDescriptionPopup" class="protein-description">
+            <div class="protein-description-content">
+                <h2>Nome da proteina</h2>
+                <p>Descrição da proteína</p>
+                <p>Função da proteína</p>
+            </div>
+        </div>
+
         <!-- Modal Popup for Mutation Confirmation -->
         <div id="mutationPopup" class="mutation-process-modal">
             <div class="mutation-process-content">
-                <h2>Quer mutar agora?</h2>
+                <h2>Deseja modificar esse resíduo?</h2>
+                <p id="mutationPopupText">Posição: <span id="mutationPosition"></span></p>
                 <button id="yesButton">Sim</button>
                 <button id="noButton">Não</button>
             </div>
@@ -268,46 +351,65 @@
 
         var viewerContainer = document.getElementById("myViewer");
         viewerInstance.render(viewerContainer, options);
+        
+        // Show the mutation instructions popup
+        document.getElementById('instructionsPopup').style.display = 'flex';
+        document.getElementById('continueInstrunctions').addEventListener('click', function() {
+            document.getElementById('instructionsPopup').style.display = 'none';
+            document.getElementById('proteinDescriptionPopup').style.display = 'flex';
+        });
 
-	        // Bind to the PDB.molstar.click event
-            document.addEventListener('PDB.molstar.click', function(e) {
-                    var eventData = e.eventData; // Contains information about the clicked residue
-                    console.log("Clicked residue data:", eventData);
-                    if (eventData && eventData.residueNumber) {
-                        var residueNumber = eventData.residueNumber;
 
-                        console.log("Clicked residue number:", residueNumber);
-                        
-                        // Assume eventData.residueName holds the one-letter amino acid (e.g., "A", "C", etc.)
-                        var residueName = eventData.comp_id || "";
-                        console.log("Clicked residue number:", residueNumber, "Residue:", residueName);
-                        
-                        // Set the selected position and store the original amino acid
-                        selectedPosition = residueNumber;
-                        window.originalResidue = residueName;
-                        
-                        // send position value
-                        document.getElementById('position').value = residueNumber;
-                        //document.getElementById('data-position').submit();
-                        
-                        // Show the mutation confirmation popup
-                        document.getElementById('mutationPopup').style.display = 'flex';
+        // Bind to the PDB.molstar.click event
+        document.addEventListener('PDB.molstar.click', function(e) {
+                var eventData = e.eventData; // Contains information about the clicked residue
+                console.log("Clicked residue data:", eventData);
+                if (eventData && eventData.residueNumber) {
+                    var residueNumber = eventData.residueNumber;
+                    console.log("Clicked residue number:", residueNumber);
+                    
+                    // Assume eventData.residueName holds the one-letter amino acid (e.g., "A", "C", etc.)
+                    var residueName = eventData.comp_id || "";
+                    
+                    // Set the selected position and store the original amino acid
+                    selectedPosition = residueNumber;
+                    window.originalResidue = residueName;
+                    
+                    // send position value
+                    document.getElementById('position').value = residueNumber;
+                    
+                    
+                    document.getElementById('proteinDescriptionPopup').style.display = 'none';
+
+                    // Show the mutation confirmation popup
+                    const mutationPopup = document.getElementById('mutationPopup');
+                    if (mutationPopup) {
+                        document.getElementById('mutationPosition').innerText = residueNumber;
+                        mutationPopup.style.display = 'flex';
+
+                    } else {
+                        console.error('mutationPopup element not found');
                     }
-                });
+
+                        
+                }
+        });
 
         // When 'Sim' button is clicked, redirect to the mutation page
         document.getElementById('yesButton').addEventListener('click', function() {
             console.log("Mutating residue: " + selectedPosition);
             document.getElementById("mutationPopup").style.display = "none";
 
-        // Highlight the original amino acid option
+            // Highlight the original amino acid option
             if (window.originalResidue) {
                 var origButton = document.querySelector('.mutation-option[data-mutation="'+ window.originalResidue +'"]');
                 if (origButton) {
                     origButton.classList.add('selected');
                 }
             }
+                
             document.getElementById('mutationOptionsModal').style.display = 'flex'; 
+        
         });
 
         // When 'Não' button is clicked, hide the popup and stay on the current page
@@ -315,7 +417,7 @@
             document.getElementById('mutationPopup').style.display = 'none';
         });
 
-	// Close the mutation options modal when 'Fechar' is clicked
+        // Close the mutation options modal when 'Fechar' is clicked
         document.getElementById('closeMutationOptionsModal').addEventListener('click', function() {
             // Remove highlight from original amino acid option
             if (window.originalResidue) {
@@ -324,7 +426,6 @@
                     origButton.classList.remove('selected');
                 }
             }
-            
             document.getElementById('mutationOptionsModal').style.display = 'none';
         });
 
@@ -333,13 +434,9 @@
             button.addEventListener('click', function() {
                 var mutation = this.getAttribute('data-mutation');
 
-                alert("Mutação aplicada: " + mutation);
                 // Show the mutation processing modal
                 document.getElementById('mutationValue').value = mutation;
                 document.getElementById('mutationForm').submit();
-                //var mutationStatus = "{{ mutation_result }}".includes("ESTABILIZANTE") ? "stable" : "unstable"; 
-		        //console.log(mutationStatus);
-	        //window.location.href = "/" + mutationStatus;  // Redirect to appropriate page
 	    });
         });
 

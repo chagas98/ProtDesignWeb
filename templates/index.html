@@ -14,7 +14,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #ffffff; /* fallback background color */
+            background-color: #ffffff;
             background-image: url("{{ url_for('static', filename='images/background.png') }}");
             background-size: cover;
             background-position: center;
@@ -27,7 +27,17 @@
             position: relative;
         }
 
-        /* Header container styling: transparent gray background */
+        /* Flex container for the boxes */
+        .content-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 2000px;
+        }
+
+        /* Header container styling */
         .header-container {
             background-color: rgba(128, 128, 128, 0.5);
             padding: 20px;
@@ -36,10 +46,36 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 20px;
-            width: 30%;
+            width: 20%;
             max-width: 600px;
             text-align: center;
             position: relative;
+        }
+
+        /* Side box styling */
+        .side-box {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 40%;
+            max-width: 500px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .side-box h2 {
+            font-size: 1.7rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .side-box p {
+            font-size: 1.5rem;
+            color: #555;
         }
 
         /* Header title styling */
@@ -112,10 +148,26 @@
         <p><a href="https://lnbio.cnpem.br/" target="_blank">Site LNBio</a></p>
     </div>
 
-    <!-- Header container with title and image -->
-    <div class="header-container">
-        <h1 class="title">Grupo de Design de Proteínas</h1>
-        <img src="{{ url_for('static', filename='images/carimbo.png') }}" alt="Header Image" class="header-image">
+    <!-- Content container with side boxes and header container -->
+    <div class="content-container">
+        <!-- Left side box -->
+        <div class="side-box">
+            <h2>O que é Design de Proteínas?</h2>
+            <p>Uma breve descrição sobre design de proteínas.</p>
+        </div>
+
+        <!-- Header container with title and image -->
+        <div class="header-container">
+            <h1 class="title">Grupo de Design de Proteínas</h1>
+            <img src="{{ url_for('static', filename='images/carimbo.png') }}" alt="Header Image" class="header-image">
+        </div>
+
+        <!-- Right side box -->
+        <div class="side-box">
+            <h2>Otimize sua proteína em tempo real!</h2>
+            <p>Veja como pequenas mudanças podem gerar grandes resultados na estabilidade estrutural.
+               Essa atividade busca explorar mutações que fortalecem a estrutura da sua proteína.</p>
+        </div>
     </div>
 
     <!-- Start button -->

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -206,6 +206,25 @@
             <p id="fancyPopupMessage">Carregando trajetórias...</p>
         </div>
 
+        <div id="loadingOverlay" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255,255,255,0.8);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            font-size: 1.8rem;
+            color: #333;
+        ">
+            Carregando estrutura...
+        </div>
+
+
         <div class="bar-left">
             <div class="wrapper">
                 <div class="label-top">ESTABILIZANTE</div>
@@ -301,6 +320,11 @@
 
         viewerInstance.events.loadComplete.subscribe(() => {
             console.log("Plugin managers:", viewerInstance.plugin.managers);
+
+            // Esconder a tela de loading assim que o carregamento do Mol* estiver completo
+            const overlay = document.getElementById("loadingOverlay");
+            if (overlay) overlay.style.display = "none";
+            
             const hierarchy = viewerInstance.plugin.managers.structure.hierarchy.current;
             if (!hierarchy || !hierarchy.models || hierarchy.models.length === 0) {
                 console.warn("No structure models available on load.");
@@ -350,7 +374,7 @@
                 }
                 
                 change_frame(currentFrame);
-                currentFrame += 5;
+                currentFrame += 20;
                 if (currentFrame >= totalFrames) {
                     currentFrame = totalFrames;
                 }
