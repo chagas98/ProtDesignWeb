@@ -166,14 +166,12 @@
         }
 
         .protein-description {
-            display: none; /* Mostrar inicialmente */
+            display: none; /* Initially hidden */
             position: fixed;
-            top: 20%;
-            left: 3%;
-            width: auto;
-            height: auto;
-            justify-content: flex-start;
-            align-items: flex-start;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 12%;
             z-index: 1005;
         }
 
@@ -185,6 +183,17 @@
             width: 400px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+
+        .protein-description-content button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 
@@ -214,6 +223,7 @@
                     Essa proteína, produzida pela nossa glândula pituitária, estimula o crescimento celular em tecidos e órgãos, especialmente nos ossos, além de regular uma série de processos metabólicos. 
                     Deficiências na produção do hormônio do crescimento pelo corpo podem levar a problemas de crescimento e desenvolvimento. </p>
                 <p>No SUS, o hormônio do crescimento em sua forma recombinante pode ser utilizado para tratar distúrbios causados pela sua deficiência.</p>
+                <button id="AdvancedOptions">Opções avançadas de visualização</button>
             </div>
         </div>
 
@@ -234,103 +244,100 @@
             
             <!-- Modal Popup for Mutation Options -->
             <div id="mutationOptionsModal" class="mutation-options-modal">
-                <div class="mutation-options-content">
+            <div class="mutation-options-content">
                 <h2>Escolha uma mutação</h2>
                 <!-- Dynamically generated mutation buttons with amino acid images -->
                 <button class="mutation-option" data-mutation="ALA">
-                    <img src="{{ url_for('static', filename='images/aminoacids/alanine_noH.svg') }}" alt="Amino Acid A" width="64" height="64">
-                    <div style="margin-top: 4px;">Alanina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/alanine_noH.svg') }}" alt="Amino Acid A" width="64" height="64">
+                <div style="margin-top: 4px;">Alanina</div>
                 </button>
                 <button class="mutation-option" data-mutation="CYS">
-                    <img src="{{ url_for('static', filename='images/aminoacids/cysteine_noH.svg') }}" alt="Amino Acid C" width="64" height="64">
-                    <div style="margin-top: 4px;">Cisteína</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/cysteine_noH.svg') }}" alt="Amino Acid C" width="64" height="64">
+                <div style="margin-top: 4px;">Cisteína</div>
                 </button>
                 <button class="mutation-option" data-mutation="ASP">
-                    <img src="{{ url_for('static', filename='images/aminoacids/aspartic_acid_noH.svg') }}" alt="ASP" width="64" height="64">
-                    <div style="margin-top: 4px;">Aspartato</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/aspartic_acid_noH.svg') }}" alt="ASP" width="64" height="64">
+                <div style="margin-top: 4px;">Aspartato</div>
                 </button>
                 <button class="mutation-option" data-mutation="GLU">
-                    <img src="{{ url_for('static', filename='images/aminoacids/glutamic_acid_noH.svg') }}" alt="Amino Acid E" width="64" height="64">
-                    <div style="margin-top: 4px;">Glutamato</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/glutamic_acid_noH.svg') }}" alt="Amino Acid E" width="64" height="64">
+                <div style="margin-top: 4px;">Glutamato</div>
                 </button>
                 <button class="mutation-option" data-mutation="PHE">
-                    <img src="{{ url_for('static', filename='images/aminoacids/phenylalanine_noH.svg') }}" alt="Amino Acid F" width="64" height="64">
-                    <div style="margin-top: 4px;">Fenilalina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/phenylalanine_noH.svg') }}" alt="Amino Acid F" width="64" height="64">
+                <div style="margin-top: 4px;">Fenilalina</div>
                 </button>
                 <button class="mutation-option" data-mutation="GLY">
-                    <img src="{{ url_for('static', filename='images/aminoacids/glycine_noH.svg') }}" alt="Amino Acid G" width="64" height="64">
-                    <div style="margin-top: 4px;">Glicina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/glycine_noH.svg') }}" alt="Amino Acid G" width="64" height="64">
+                <div style="margin-top: 4px;">Glicina</div>
                 </button>
                 <button class="mutation-option" data-mutation="HIS">
-                    <img src="{{ url_for('static', filename='images/aminoacids/histidine_noH.svg') }}" alt="Amino Acid H" width="64" height="64">
-                    <div style="margin-top: 4px;">Histidina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/histidine_noH.svg') }}" alt="Amino Acid H" width="64" height="64">
+                <div style="margin-top: 4px;">Histidina</div>
                 </button>
                 <button class="mutation-option" data-mutation="ILE">
-                    <img src="{{ url_for('static', filename='images/aminoacids/isoleucine_noH.svg') }}" alt="Amino Acid I" width="64" height="64">
-                    <div style="margin-top: 4px;">Isoleucina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/isoleucine_noH.svg') }}" alt="Amino Acid I" width="64" height="64">
+                <div style="margin-top: 4px;">Isoleucina</div>
                 </button>
                 <button class="mutation-option" data-mutation="LYS">
-                    <img src="{{ url_for('static', filename='images/aminoacids/lysine_noH.svg') }}" alt="Amino Acid K" width="64" height="64">
-                    <div style="margin-top: 4px;">Lisina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/lysine_noH.svg') }}" alt="Amino Acid K" width="64" height="64">
+                <div style="margin-top: 4px;">Lisina</div>
                 </button>
                 <button class="mutation-option" data-mutation="LEU">
-                    <img src="{{ url_for('static', filename='images/aminoacids/leucin_noH.svg') }}" alt="Amino Acid L" width="64" height="64">
-                    <div style="margin-top: 4px;">Leucina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/leucin_noH.svg') }}" alt="Amino Acid L" width="64" height="64">
+                <div style="margin-top: 4px;">Leucina</div>
                 </button>
                 <button class="mutation-option" data-mutation="MET">
-                    <img src="{{ url_for('static', filename='images/aminoacids/methionine_noH.svg') }}" alt="Amino Acid M" width="64" height="64">
-                    <div style="margin-top: 4px;">Metionina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/methionine_noH.svg') }}" alt="Amino Acid M" width="64" height="64">
+                <div style="margin-top: 4px;">Metionina</div>
                 </button>
                 <button class="mutation-option" data-mutation="ASP">
-                    <img src="{{ url_for('static', filename='images/aminoacids/asparagine_noH.svg') }}" alt="Amino Acid N" width="64" height="64">
-                    <div style="margin-top: 4px;">Asparagina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/asparagine_noH.svg') }}" alt="Amino Acid N" width="64" height="64">
+                <div style="margin-top: 4px;">Asparagina</div>
                 </button>
                 <button class="mutation-option" data-mutation="PRO">
-                    <img src="{{ url_for('static', filename='images/aminoacids/proline_noH.svg') }}" alt="Amino Acid P" width="64" height="64">
-                    <div style="margin-top: 4px;">Prolina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/proline_noH.svg') }}" alt="Amino Acid P" width="64" height="64">
+                <div style="margin-top: 4px;">Prolina</div>
                 </button>
                 <button class="mutation-option" data-mutation="GLN">
-                    <img src="{{ url_for('static', filename='images/aminoacids/glutamine_noH.svg') }}" alt="Amino Acid Q" width="64" height="64">
-                    <div style="margin-top: 4px;">Glutamina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/glutamine_noH.svg') }}" alt="Amino Acid Q" width="64" height="64">
+                <div style="margin-top: 4px;">Glutamina</div>
                 </button>
                 <button class="mutation-option" data-mutation="ARG">
-                    <img src="{{ url_for('static', filename='images/aminoacids/arginine_noH.svg') }}" alt="Amino Acid R" width="64" height="64">
-                    <div style="margin-top: 4px;">Arginina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/arginine_noH.svg') }}" alt="Amino Acid R" width="64" height="64">
+                <div style="margin-top: 4px;">Arginina</div>
                 </button>
                 <button class="mutation-option" data-mutation="SER">
-                    <img src="{{ url_for('static', filename='images/aminoacids/serine_noH.svg') }}" alt="Amino Acid S" width="64" height="64">
-                    <div style="margin-top: 4px;">Serina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/serine_noH.svg') }}" alt="Amino Acid S" width="64" height="64">
+                <div style="margin-top: 4px;">Serina</div>
                 </button>
                 <button class="mutation-option" data-mutation="THR">
-                    <img src="{{ url_for('static', filename='images/aminoacids/threonine_noH.svg') }}" alt="Amino Acid T" width="64" height="64">
-                    <div style="margin-top: 4px;">Threonina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/threonine_noH.svg') }}" alt="Amino Acid T" width="64" height="64">
+                <div style="margin-top: 4px;">Threonina</div>
                 </button>
                 <button class="mutation-option" data-mutation="VAL">
-                    <img src="{{ url_for('static', filename='images/aminoacids/valine_noH.svg') }}" alt="Amino Acid V" width="64" height="64">
-                    <div style="margin-top: 4px;">Valina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/valine_noH.svg') }}" alt="Amino Acid V" width="64" height="64">
+                <div style="margin-top: 4px;">Valina</div>
                 </button>
                 <button class="mutation-option" data-mutation="TRP">
-                    <img src="{{ url_for('static', filename='images/aminoacids/tryptophan_noH.svg') }}" alt="Amino Acid W" width="64" height="64">
-                    <div style="margin-top: 4px;">Triptofano</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/tryptophan_noH.svg') }}" alt="Amino Acid W" width="64" height="64">
+                <div style="margin-top: 4px;">Triptofano</div>
                 </button>
                 <button class="mutation-option" data-mutation="TYR">
-                    <img src="{{ url_for('static', filename='images/aminoacids/tyrosine_noH.svg') }}" alt="Amino Acid Y" width="64" height="64">
-                    <div style="margin-top: 4px;">Tirosina</div>
+                <img src="{{ url_for('static', filename='images/aminoacids/tyrosine_noH.svg') }}" alt="Amino Acid Y" width="64" height="64">
+                <div style="margin-top: 4px;">Tirosina</div>
                 </button>
-                <!-- The original amino acid button can be marked with the "selected" class -->
-                <!-- For example: -->
-                <!-- <button class="mutation-option selected" data-mutation="X">...</button> -->
-
+                
                 <!-- Fechar button in the last line alone -->
                 <div style="width:100%; text-align: center; margin-top: 10px;">
-                    <button id="closeMutationOptionsModal" class="popup-button">
+                <button type="button" id="closeMutationOptionsModal" class="popup-button">
                     <div style="margin-top: 4px;">Fechar</div>
-                    </button>
-                </div>
+                </button>
                 </div>
             </div>
+            </div>
         </form>
-    </main>
+        </main>
 
         <script>
         var selectedPosition = null;
@@ -361,6 +368,11 @@
             document.getElementById('proteinDescriptionPopup').style.display = 'flex';
         });
 
+        document.getElementById('AdvancedOptions').addEventListener('click', function() {
+            // Open the advanced options for visualization
+            document.getElementById('proteinDescriptionPopup').style.display = 'none';
+        });
+
 
         // Bind to the PDB.molstar.click event
         document.addEventListener('PDB.molstar.click', function(e) {
@@ -380,9 +392,6 @@
                     // send position value
                     document.getElementById('position').value = residueNumber;
                     
-                    
-                    document.getElementById('proteinDescriptionPopup').style.display = 'none';
-
                     // Show the mutation confirmation popup
                     const mutationPopup = document.getElementById('mutationPopup');
                     if (mutationPopup) {

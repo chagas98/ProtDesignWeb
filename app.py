@@ -95,7 +95,8 @@ def start():
             else:
                 mutation_result = f"A mutação {position}{mutation_aa} tem ΔΔG de 0, não é nem estabilizante nem destabilizante."
                 bar_value = 0
-                redirect_page = None
+                redirect_page = None       
+            
 
     return render_template("start.html", pdb_file=TOPOL_FILE)
 
