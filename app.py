@@ -36,7 +36,6 @@ convert_aa_names = {
     "VAL": "V"
 }
 
-THRESHOLD = 0.0  # valor fictício de threshold para decidir entre estável/instável
 TOPOL_FILE = "GH1_AF_renum.pdb"  # arquivo PDB original
 STABLE_FILE = "folding_stable_rebuilt_trajectory_backbone.pdb"
 UNSTABLE_FILE = "folding_unstable_rebuilt_trajectory_backbone.pdb"  # arquivo PDB para mutações instáveis
@@ -48,18 +47,7 @@ def index():
 
 @app.route("/start", methods=["GET", "POST"])
 def start():
-    def get_sequence_from_pdb(filename):
-        # If needed, adjust the path; if the file is in "static/data", you could do:
-        filepath = os.path.join('data', filename)
-        parser = PDBParser(QUIET=True)
-        structure = parser.get_structure("structure", filepath)
-        ppb = PPBuilder()
-        # Concatenate sequences from all polypeptides found in the structure (using the first peptide)
-        pp = ppb.build_peptides(structure[0])
-        return str(pp[0].get_sequence())
 
-    mutation_result = None
-    sequence = get_sequence_from_pdb(TOPOL_FILE)
     mutation_aa = request.form.get("data-mutation")
     bar_value = 0
     redirect_page = None
@@ -83,17 +71,14 @@ def start():
             print(f"AA Value: {aa_value}")
             # Determine if the mutation is stabilizing or destabilizing
             if aa_value > 0:
-                mutation_result = f"A mutação {position}{mutation_aa} é **ESTABILIZANTE** (ΔΔG={aa_value:.2f})"
                 bar_value = aa_value  # Positive value indicates stabilizing
                 return redirect(url_for("stable", bar_value=bar_value))
                 #return render_template("stable.html", mutation_result=mutation_result, bar_value=bar_value, pdb_file=pdb_file, sequence=sequence, redirect_page=redirect_page)
             elif aa_value < 0:
-                mutation_result = f"A mutação {position}{mutation_aa} é **DESESTABILIZANTE** (ΔΔG={aa_value:.2f})"
                 bar_value = aa_value  # Negative value indicates stabilizing
                 return redirect(url_for("unstable", bar_value=bar_value))
                 #return render_template("unstable.html", mutation_result=mutation_result, bar_value=bar_value, pdb_file=pdb_file, sequence=sequence, redirect_page=redirect_page)
             else:
-                mutation_result = f"A mutação {position}{mutation_aa} tem ΔΔG de 0, não é nem estabilizante nem destabilizante."
                 bar_value = 0
                 redirect_page = None       
             
