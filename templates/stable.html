@@ -320,7 +320,13 @@
 
         viewerInstance.events.loadComplete.subscribe(() => {
             console.log("Plugin managers:", viewerInstance.plugin.managers);
-
+            for (const s of viewerInstance.plugin.managers.structure.hierarchy.current.structures) {
+                            viewerInstance.plugin.managers.structure.component.updateRepresentationsTheme(s.components, {
+                            color: "sequence-id"
+                        });
+                    }
+            viewerInstance.visual.toggleSpin(true);
+            
             // Esconder a tela de loading assim que o carregamento do Mol* estiver completo
             const overlay = document.getElementById("loadingOverlay");
             if (overlay) overlay.style.display = "none";
