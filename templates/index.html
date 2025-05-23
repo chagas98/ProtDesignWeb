@@ -95,7 +95,7 @@
 
         /* Button styling */
         .start-button {
-            background-color: #4CAF50;
+            background-color: #4b76eb;
             color: white;
             padding: 20px 40px;
             font-size: 2rem;
@@ -131,14 +131,49 @@
         footer {
             position: absolute;
             bottom: 10px;
+            height: 10%;
             width: 100%;
             text-align: center;
+            z-index: 2;
+            background-color: rgba(170, 166, 166, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        
+
         footer img {
             max-width: 600px;
             height: auto;
-            margin: 0 1px;
+            margin: 0;
+        }
+        
+        #CheckProtein {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            font-size: 1rem;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        .fancy-button {
+            background: linear-gradient(135deg, #6aeb6e, #4b76eb);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            z-index: 1;
         }
     </style>
 </head>
@@ -154,9 +189,9 @@
         <!-- Left side box -->
         <div class="side-box">
             <h2>O que é design e engenharia de proteínas?</h2>
-            <p>O design de proteínas chamado "de novo" é o processo de criar uma sequência de proteína do zero para realizar uma determinada função, 
-                sem se basear em uma proteína natural existente. Podemos também utilizar proteínas naturais e melhorar propriedades como estabilidade, 
-                solubilidade e afinidade, em um processo que chamamos de engenharia de proteínas.</p>
+            <p>O design de proteínas chamado "<strong style="color: #4b76eb;"><em>de novo</em></strong>" é o processo de criar uma sequência de proteína do zero para realizar uma determinada função, 
+                            sem se basear em uma proteína natural existente. Podemos também utilizar proteínas naturais e melhorar propriedades como <strong style="color: #4b76eb;">estabilidade</strong>, 
+                            <strong style="color: #4b76eb;">solubilidade</strong> e <strong style="color: #4b76eb;">afinidade</strong>, em um processo que chamamos de <strong style="color: #4b76eb;">engenharia de proteínas</strong>.</p>
         </div>
 
         <!-- Header container with title and image -->
@@ -168,13 +203,19 @@
         <!-- Right side box -->
         <div class="side-box">
             <h2>Vamos melhorar a estabilidade de uma proteína!</h2>
-            <p>A estabilidade de uma proteína é sua capacidade de manter a estrutura tridimensional correta e, assim, desempenhar sua função, mesmo diante de mudanças no ambiente, como variações de temperatura. 
-                Nesta atividade, usaremos um modelo de Inteligência Artificial para predizer mutações na sequência de uma proteína que possam deixá‑la mais estável.</p>
+            <p> A <strong style="color: #4b76eb;">estabilidade</strong> de uma proteína é sua capacidade de manter a <strong style="color: #4b76eb;">estrutura tridimensional</strong> correta e, assim, desempenhar sua <strong style="color: #4b76eb;">função</strong>, mesmo diante de mudanças no ambiente, como variações de temperatura. 
+                Nesta atividade, usaremos um modelo de <strong style="color: #4b76eb;">Inteligência Artificial</strong> para predizer <strong style="color: #4b76eb;">modificações</strong> na sequência de uma proteína que possam deixá‑la mais estável.</p>
         </div>
     </div>
 
     <!-- Start button -->
-    <button id="startButton" class="start-button">Iniciar</button>
+    <!-- Start button -->
+    <button id="startButton" class="fancy-button">
+        <div><i class="fas fa-ellipsis-h"></i>Iniciar</div>
+    </button>
+
+    <!-- Botão pequeno no canto inferior esquerdo para abrir outra página -->
+    <button id="openPageButton">Proteína 3D</button>
 
     <!-- Footer -->
     <footer>
@@ -185,6 +226,11 @@
         // Redirect to the main page when the "Iniciar" button is clicked
         document.getElementById("startButton").addEventListener("click", function() {
             window.location.href = "/start";
+        });
+
+        // Redireciona para "outra.html" ao clicar no botão pequeno
+        document.getElementById("openPageButton").addEventListener("click", function() {
+            window.location.href = "/proteina3d";
         });
     </script>
 

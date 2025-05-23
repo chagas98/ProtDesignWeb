@@ -12,7 +12,7 @@ with open("data/stability_lookup.json") as f:
 
 df = pd.read_csv("data/GH1_mpnn_probs_diff.csv", index_col=0)
 
-print(df)
+print(df*-1)
 convert_aa_names = {
     "ALA": "A",
     "ARG": "R",
@@ -67,7 +67,7 @@ def start():
             print(f"Mutation AA2: {mutation_aa}")
             # Get the corresponding row (position) and column (mutation amino acid)
             row = df.iloc[position-1]
-            aa_value = row[mutation_aa]  # Get the value from the DataFrame cell
+            aa_value = row[mutation_aa]*-1  # Get the value from the DataFrame cell
             print(f"AA Value: {aa_value}")
             # Determine if the mutation is stabilizing or destabilizing
             if aa_value > 0:
@@ -95,6 +95,10 @@ def stable():
 def unstable():
     bar_value = request.args.get("bar_value", default=0, type=float)
     return render_template("unstable.html", unstable_file=UNSTABLE_FILE, bar_value=bar_value)
+
+@app.route("/proteina3d")
+def proteina3d():
+    return render_template("proteina3d.html", pdb_file=TOPOL_FILE)
 
 
 if __name__ == "__main__":

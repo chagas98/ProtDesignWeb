@@ -62,7 +62,7 @@
         }
 
         .instructions-start-content button {
-            background-color: #4CAF50;
+            background-color: #4b76eb;
             color: white;
             padding: 10px 20px;
             font-size: 1rem;
@@ -72,7 +72,7 @@
         }
 
         .instructions-start-content button:hover {
-            background-color: #45a049;
+            background-color: #4b76eb;
         }
         
         /* Modal Popup for "Mutar agora?" */
@@ -104,7 +104,7 @@
         }
 
         .mutation-process-content button {
-            background-color: #4CAF50;
+            background-color: #4b76eb;
             color: white;
             padding: 10px 20px;
             font-size: 1rem;
@@ -114,7 +114,7 @@
         }
 
         .mutation-process-content button:hover {
-            background-color: #45a049;
+            background-color: #4b76eb;
         }
 
         /* Modal Popup for Mutation Options */
@@ -146,7 +146,7 @@
         }
 
         .mutation-options-content button {
-            background-color: #4CAF50;
+            background-color: #4b76eb;
             color: white;
             padding: 10px 20px;
             font-size: 1rem;
@@ -157,7 +157,7 @@
         }
 
         .mutation-options-content button:hover {
-            background-color: #45a049;
+            background-color: #a4b6e9;
         }
 
         .mutation-option.selected {
@@ -185,13 +185,30 @@
         }
 
         .protein-description-content button {
-            background-color: #4CAF50;
+            background-color: #4b76eb;
             color: white;
             padding: 10px 20px;
             font-size: 1rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        /* Reset button styling in the lower right */
+        #inicioButton {
+            position: fixed;
+            bottom: 20px;
+            right: 70px;
+            background-color: #4b76eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10000;
+            width: 150px;
+            height: 80px;
+            font-size: 1.2rem;
         }
 
     </style>
@@ -203,7 +220,8 @@
         
         <!-- Protein Structure Panel -->
         <div id="myViewer" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;"></div>
-
+        <button id="inicioButton" onclick="window.location.href='/'">Início</button>
+        
         <!-- Popup to explain -->
         <div id="instructionsPopup" class="instructions-start">
             <div class="instructions-start-content">

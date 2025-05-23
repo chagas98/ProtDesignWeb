@@ -32,7 +32,7 @@
         }
 
         .fancy-popup button {
-            background-color: #4CAF50;
+            background-color: #4b76eb;
             color: white;
             padding: 10px 20px;
             font-size: 1rem;
@@ -43,7 +43,7 @@
         }
 
         .fancy-popup button:hover {
-            background-color: #45a049;
+            background-color: #4b76eb;
         }
 
         .wrapper {
@@ -90,7 +90,7 @@
         }
 
         .bar-fill.positive {
-            background: linear-gradient(to top, #32cd32, #7CFC00);
+            background: linear-gradient(to top, #45a049, #226b26);
             bottom: 50%;
             transform-origin: bottom;
             border-top-left-radius: 30px;
@@ -156,7 +156,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #4CAF50;
+            background-color: #4b76eb;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -174,7 +174,7 @@
             position: fixed;
             bottom: 20px;
             right: 200px;
-            background-color: #4CAF50;
+            background-color: #4b76eb;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -187,7 +187,7 @@
         }
 
         #resetButton:hover {
-            background-color: #45a049;
+            background-color: #4b76eb;
         }
     </style>
 </head>
@@ -351,7 +351,7 @@
             progressBarContainer.style = "margin-top:10px; width:100%; height:20px; background-color:#e0e0e0; border-radius:5px; overflow:hidden;";
             let progressBar = document.createElement("div");
             progressBar.id = "loading_bar";
-            progressBar.style = "width:0%; height:100%; background-color:#4CAF50;";
+            progressBar.style = "width:0%; height:100%; background-color:#4b76eb;";
             progressBarContainer.appendChild(progressBar);
             document.getElementById("fancyPopup").appendChild(progressBarContainer);
 
@@ -380,7 +380,7 @@
                 }
                 
                 change_frame(currentFrame);
-                currentFrame += 20;
+                currentFrame += 15;
                 if (currentFrame >= totalFrames) {
                     currentFrame = totalFrames;
                 }

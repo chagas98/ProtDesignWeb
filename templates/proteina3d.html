@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Design de Proteínas - Selecione a Posição</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.3.0/build/pdbe-molstar-light.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pdbe-molstar@3.2.0/build/pdbe-molstar-plugin.js"></script>
+
+    <style>
+        /* Base styling for the body and content */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #222;
+        }
+
+        main {
+            max-width: 960px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Protein Structure Panel */
+        #myViewer {
+            width: 100%;
+            height: 500px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            position: relative; 
+        }
+
+        /* Modal Popup for "Mutar agora?" */
+        .instructions-start {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .instructions-start-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructions-start-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .instructions-start-content button {
+            background-color: #4b76eb;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .instructions-start-content button:hover {
+            background-color: #45a049;
+        }
+        
+        /* Modal Popup for "Mutar agora?" */
+        .mutation-process-modal {
+            display: none; /* Initially hidden */
+            top: 0;
+            left: 0;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            z-index: 1002; /* Ensure it appears in front of everything */
+        }
+
+        .mutation-process-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .mutation-process-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .mutation-process-content button {
+            background-color: #4b76eb;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .mutation-process-content button:hover {
+            background-color: #45a049;
+        }
+
+        /* Modal Popup for Mutation Options */
+        .mutation-options-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            justify-content: center;
+            align-items: center;
+            z-index: 1003;
+        }
+
+        .mutation-options-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .mutation-options-content h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .mutation-options-content button {
+            background-color: #4b76eb;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .mutation-options-content button:hover {
+            background-color: #45a049;
+        }
+
+        .mutation-option.selected {
+            border: 2px solid #000;
+            background-color: #e0e0e0;
+        }
+
+        .protein-description {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 12%;
+            z-index: 1005;
+        }
+
+        .protein-description-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .protein-description-content button {
+            background-color: #4b76eb;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Reset button styling in the lower right */
+        #inicioButton {
+            position: fixed;
+            bottom: 20px;
+            right: 70px;
+            background-color: #4b76eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10000;
+            width: 150px;
+            height: 80px;
+            font-size: 1.2rem;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main>    
+        <!-- Protein Structure Panel -->
+        <div id="myViewer" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;"></div>
+        <button id="inicioButton" onclick="window.location.href='/'">Início</button>
+
+    </main>
+
+        <script>
+        var selectedPosition = null;
+        window.originalResidue = null;
+        
+
+        // Show the protein structure visualization (Mol* plugin setup)
+        var viewerInstance = new PDBeMolstarPlugin();
+        var options = {
+            customData: {
+                url: "/static/pdb/{{ pdb_file }}",  // Ensure the correct pdb_file path is passed
+                format: "pdb"
+            },
+            alphafoldView: false,
+            sequencePanel: true,  // Enable the sequence inside Mol*
+            bgColor: { r: 255, g: 255, b: 255 },
+            expanded: true, 
+            hideControls: false
+        };
+
+        var viewerContainer = document.getElementById("myViewer");
+        viewerInstance.render(viewerContainer, options);
+    </script>
+
+</body>
+</html>
+
