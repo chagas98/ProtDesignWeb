@@ -36,7 +36,6 @@ convert_aa_names = {
     "VAL": "V"
 }
 
-EXAMPLE_PROTEIN = "top7.pdb"
 TOPOL_FILE = "GH1_AF_renum.pdb"  # arquivo PDB original
 STABLE_FILE = "folding_stable_rebuilt_trajectory_backbone.pdb"
 UNSTABLE_FILE = "folding_unstable_rebuilt_trajectory_backbone.pdb"  # arquivo PDB para mutações instáveis
@@ -99,7 +98,7 @@ def unstable():
 
 @app.route("/proteina3d")
 def proteina3d():
-    return render_template("proteina3d.html", pdb_file=EXAMPLE_PROTEIN)
+    return render_template("proteina3d.html", pdb_file=TOPOL_FILE)
 
 
 if __name__ == "__main__":
